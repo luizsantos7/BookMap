@@ -1,4 +1,4 @@
-package com.example.bookmap.data.local
+package com.example.bookmap.data.network
 
 import com.example.bookmap.data.api.BookApi
 import okhttp3.OkHttpClient
@@ -21,8 +21,18 @@ object RetrofitClient {
     private fun getUnsafeOkHttpClient(): OkHttpClient {
         val trustAllCerts = arrayOf<TrustManager>(
             object : X509TrustManager {
-                override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
-                override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {}
+                override fun checkClientTrusted(
+                    chain: Array<out X509Certificate>?,
+                    authType: String?
+                ) {
+                }
+
+                override fun checkServerTrusted(
+                    chain: Array<out X509Certificate>?,
+                    authType: String?
+                ) {
+                }
+
                 override fun getAcceptedIssuers() = arrayOf<X509Certificate>()
             }
         )
