@@ -9,6 +9,9 @@ interface BookApi {
     fun listarLivros(): List<BookResponse>
 
     @GET("books/{id}")
-    fun listarLivroPorId(@Path("id") id:Int):BookResponse
+    suspend fun listarLivroPorId(@Path("id") id:Int):BookResponse
+
+    @GET("books?languages={language}")
+    suspend fun listarLivrosPorLinguagem(@Path("language") id:String):BookResponse
 
 }
