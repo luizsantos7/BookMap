@@ -6,6 +6,7 @@ import com.example.bookmap.data.repository.UserRepository
 import com.example.bookmap.presentation.login.LoginScreenAction.EmailChanged
 import com.example.bookmap.presentation.login.LoginScreenAction.PasswordChanged
 import com.example.bookmap.presentation.login.LoginScreenAction.SubmitLogin
+import com.example.bookmap.presentation.login.LoginScreenAction.newRegister
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel(){
-    private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState())
+    private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState
 
     fun onActionEvent(action: LoginScreenAction) {
@@ -23,12 +24,8 @@ class LoginViewModel @Inject constructor(
             is EmailChanged -> onEmailChange(action.newEmail)
             is PasswordChanged -> onPasswordChange(action.newPassword)
             is SubmitLogin -> onSubmitLogin(action.email, action.password)
+            is newRegister -> callRegisterDialog()
         }
-    }
-
-    fun enableLoginButton(): Boolean {
-        val password = uiState.value.password
-        return password.isNotEmpty() && password.isNotEmpty() && password.length>=6
     }
 
     fun onSubmitLogin(email: String, password: String){
@@ -40,6 +37,19 @@ class LoginViewModel @Inject constructor(
                 _uiState.value = LoginUiState(isLoading = false, showError = true)
             }
         }
+    }
+
+    fun callRegisterDialog(){
+        _uiState.value = uiState.value.copy(showRegisterDialog = true)
+    }
+
+    fun dismissRegisterDialog(){
+        _uiState.value = uiState.value.copy(showRegisterDialog = false)
+    }
+
+    fun enableLoginButton(): Boolean {
+        val password = uiState.value.password
+        return password.isNotEmpty() && password.isNotEmpty() && password.length>=6
     }
 
     fun onDismissError() {

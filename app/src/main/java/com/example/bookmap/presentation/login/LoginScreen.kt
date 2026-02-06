@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,14 +33,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.bookmap.presentation.Book.BookUiState
-import com.example.bookmap.presentation.Book.BookViewModel
+import com.example.bookmap.presentation.login.logindialog.CustomLoginDialog
 import com.example.bookmap.presentation.ui.theme.UnfocusField
 import com.example.bookmap.presentation.ui.theme.focusFieldBorder
 import com.example.bookmap.utils.components.FixedButton
 import com.example.bookmap.utils.components.OutlineTextComponent
 import com.example.bookmap.utils.components.SignUpPrompt
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 
 @Composable
@@ -50,7 +47,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var visible by remember{ mutableStateOf(false) }
+    var visible by remember { mutableStateOf(false) }
     val email = uiState.email
     val password = uiState.password
 
@@ -151,7 +148,15 @@ fun LoginScreen(
             )
 
             Spacer(Modifier.height(32.dp))
-            SignUpPrompt(onSignUpClick = { /* ação cadastro */ })
+            SignUpPrompt(onSignUpClick = { viewModel.callRegisterDialog()})
+
+            if (uiState.showRegisterDialog) {
+                CustomLoginDialog(
+                    onDismissAction = {viewModel.dismissRegisterDialog()},
+                    onContinueAction = { },
+                    viewModel = viewModel
+                )
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.bookmap.data.network
 
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -25,12 +26,13 @@ abstract class AppDatabase : RoomDatabase() {
 
         fun getInstance(context: android.content.Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
-                val instance = androidx.room.Room.databaseBuilder(
+                val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
                     "bookmap_database"
                 )
                     .addMigrations(MIGRATION_1_2)
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

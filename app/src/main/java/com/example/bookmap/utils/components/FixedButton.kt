@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.bookmap.presentation.ui.theme.PrimaryButtonLogin
 
 @Composable
 fun FixedButton(
@@ -22,7 +23,7 @@ fun FixedButton(
     secundaryButtonText: String? = null,
     primaryClickButton: () -> Unit = {},
     secundaryClickButton: () -> Unit = {},
-    primaryButtonColor: Color = Color(0xFF496D78),
+    primaryButtonColor: Color = PrimaryButtonLogin,
     secondaryButtonColor: Color = Color.Gray,
     primaryTextColor: Color = Color.White,
     secondaryTextColor: Color = Color.White,

@@ -11,7 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 //FixedButton  Colors
-val PrimaryButtonLogin = Color(0xFF3D22C3)
+val PrimaryButtonLogin = Color(0xFF496D78)
 val SecundaryButtonLogin = Color(0xFFFFEB3B)
 
 //OutlinedTextField Colors
@@ -20,3 +20,8 @@ val FocusField = Color(0xFF2F323D)
 
 val ErrorBorderColor = Color(0xFF982D3C)
 val focusFieldBorder = Color(0xFF353A46)
+
+// RegisterDialog
+
+//val RegisterDialogBackground = Color(0xFFD7C9A0)
+val RegisterDialogBackground = Color(0xFF1D1D25)
