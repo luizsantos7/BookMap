@@ -1,38 +1,57 @@
 package com.example.bookmap.presentation.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.bookmap.data.repository.UserRepository
+import com.example.bookmap.presentation.login.LoginScreenAction.EmailChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.PasswordChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.SubmitLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel(){
-    private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Initial)
+class LoginViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel(){
+    private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState())
     val uiState = _uiState
 
-    private val _presentation = MutableStateFlow(LoginUiState.Presentation())
-    val loginPresentation = _presentation
-
-
     fun onActionEvent(action: LoginScreenAction) {
-        action.fold(
-            onEmailChanged =:: onEmailChange,
-            onPasswordChanged = :: onPasswordChange,
-            //onSubmitLogin = :: onSubmitLogin
-        )
+        when (action) {
+            is EmailChanged -> onEmailChange(action.newEmail)
+            is PasswordChanged -> onPasswordChange(action.newPassword)
+            is SubmitLogin -> onSubmitLogin(action.email, action.password)
+        }
     }
 
     fun enableLoginButton(): Boolean {
-        val currentPresentation = _presentation.value
-        return currentPresentation.email.isNotEmpty() && currentPresentation.password.isNotEmpty()
+        val password = uiState.value.password
+        return password.isNotEmpty() && password.isNotEmpty() && password.length>=6
+    }
+
+    fun onSubmitLogin(email: String, password: String){
+        viewModelScope.launch {
+            val userFound = userRepository.loginUser(email = email, password = password)
+            if (userFound) {
+                _uiState.value = LoginUiState(isLoading = false, showError = false)
+            } else {
+                _uiState.value = LoginUiState(isLoading = false, showError = true)
+            }
+        }
+    }
+
+    fun onDismissError() {
+        _uiState.value = uiState.value.copy(showError = false)
     }
 
     fun onEmailChange(newEmail: String) {
-        _presentation.value = _presentation.value.copy(email = newEmail)
+        uiState.value = uiState.value.copy(email = newEmail)
     }
 
     fun onPasswordChange(newPassword: String) {
-        _presentation.value = _presentation.value.copy(password = newPassword)
+        uiState.value = uiState.value.copy(password = newPassword)
     }
 
 

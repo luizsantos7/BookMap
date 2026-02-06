@@ -19,7 +19,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -38,6 +42,7 @@ import com.example.bookmap.utils.components.FixedButton
 import com.example.bookmap.utils.components.OutlineTextComponent
 import com.example.bookmap.utils.components.SignUpPrompt
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(
@@ -45,11 +50,19 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val presentation by viewModel.loginPresentation.collectAsStateWithLifecycle()
+    var visible by remember{ mutableStateOf(false) }
+    val email = uiState.email
+    val password = uiState.password
 
-    val password = presentation.password
-    val email = presentation.email
-    val verify = if (password.length < 6 && password.isNotEmpty()) false else true
+
+    LaunchedEffect(uiState.showError) {
+        if (uiState.showError) {
+            visible = true
+            delay(3000L)
+            viewModel.onDismissError()
+            visible = false
+        }
+    }
 
     Image(
         modifier = Modifier.fillMaxSize(),
@@ -83,8 +96,9 @@ fun LoginScreen(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(bottom = 38.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 OutlineTextComponent(
                     value = email,
@@ -115,37 +129,29 @@ fun LoginScreen(
                     isError = password.length < 6 && password.isNotEmpty(),
                     modifier = Modifier.padding(horizontal = 32.dp)
                 )
-            }
 
+            }
+            if (visible) {
+                Text(
+                    text = "Erro: E-mail ou senha inválidos",
+                    color = MaterialTheme.colorScheme.error,
+                )
+                Spacer(modifier = Modifier.height(22.dp))
+            }
             FixedButton(
                 primaryButtonText = "Entrar",
                 secundaryButtonText = "Continuar como convidado",
                 primaryClickButton = {
-                    viewModel.onActionEvent(LoginScreenAction.SubmitLogin)
+                    viewModel.onSubmitLogin(email = email, password = password)
                 },
                 secundaryClickButton = { /* ação visitante */ },
                 modifier = Modifier
                     .padding(horizontal = 48.dp),
-                enabled = if (viewModel.enableLoginButton() && verify) true else false
+                enabled = viewModel.enableLoginButton()
             )
 
             Spacer(Modifier.height(32.dp))
             SignUpPrompt(onSignUpClick = { /* ação cadastro */ })
-
-            when (uiState) {
-                is LoginUiState.Initial -> {} // nada
-                is LoginUiState.Loading -> CircularProgressIndicator()
-                is LoginUiState.Error -> {
-                    val message = (uiState as LoginUiState.Error).message
-                    Text(
-                        text = "Erro: $message",
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-                is LoginUiState.Success -> {
-                    //vai ter o navigate
-                }
-            }
         }
     }
 }

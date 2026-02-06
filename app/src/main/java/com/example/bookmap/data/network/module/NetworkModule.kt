@@ -1,4 +1,4 @@
-package com.example.bookmap.data.network
+package com.example.bookmap.data.network.module
 
 import com.example.bookmap.data.api.BookApi
 import dagger.Module
@@ -9,11 +9,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -52,7 +53,7 @@ object NetworkModule {
         )
 
         val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, java.security.SecureRandom())
+        sslContext.init(null, trustAllCerts, SecureRandom())
 
         return OkHttpClient.Builder()
             .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)

@@ -1,5 +1,7 @@
 package com.example.bookmap.data.entity
 
+import com.example.bookmap.data.entity.enum.ReadStatus
+
 data class BookEntity(
     val id: Int,
     val title: String,

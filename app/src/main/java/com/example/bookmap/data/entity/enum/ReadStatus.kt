@@ -1,4 +1,4 @@
-package com.example.bookmap.data.entity
+package com.example.bookmap.data.entity.enum
 
 enum class ReadStatus {
     READ,
