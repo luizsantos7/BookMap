@@ -16,6 +16,13 @@ class BookViewModel @Inject constructor(
     private val _bookState = MutableStateFlow<BookUiState>(value = BookUiState.Initial)
     val bookState = _bookState
 
+    fun onActionEvent(action: BookScreenAction) {
+        action.fold(
+            errorScreenCloseButtonAction = ::onErrorScreenCloseClick,
+            errorScreenRetryButtonAction = ::onErrorScreenRetryClick,
+        )
+    }
+
     fun getBooks(id: Int) {
         _bookState.value = BookUiState.Loading
 
@@ -32,5 +39,8 @@ class BookViewModel @Inject constructor(
             )
         }
     }
+
+    private fun onErrorScreenCloseClick(){}
+    private fun onErrorScreenRetryClick(){}
 
 }

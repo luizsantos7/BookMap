@@ -22,10 +22,11 @@ fun FixedButton(
     secundaryButtonText: String? = null,
     primaryClickButton: () -> Unit = {},
     secundaryClickButton: () -> Unit = {},
-    primaryButtonColor: Color = Color(0xFF6200EE),
+    primaryButtonColor: Color = Color(0xFF496D78),
     secondaryButtonColor: Color = Color.Gray,
     primaryTextColor: Color = Color.White,
     secondaryTextColor: Color = Color.White,
+    enabled : Boolean = true,
 ) {
     val hasSecondary = secundaryButtonText.isNullOrEmpty()
 
@@ -44,7 +45,8 @@ fun FixedButton(
                     .fillMaxWidth()
                     .weight(1f),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = primaryButtonColor)
+                colors = ButtonDefaults.buttonColors(containerColor = primaryButtonColor),
+                enabled = enabled
             ) {
                 Text(primaryButtonText, color = primaryTextColor)
             }
@@ -70,6 +72,7 @@ fun FixedButton(
         ) {
             Button(
                 onClick = {},
+                enabled =enabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
