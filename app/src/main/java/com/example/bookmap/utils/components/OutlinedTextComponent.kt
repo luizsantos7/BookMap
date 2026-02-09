@@ -45,7 +45,7 @@ fun OutlineTextComponent(
     borderColor: Color = Color(0xFF6200EE),
     focusedBorderColor: Color = Color(0xFF6200EE),
     unfocusedBorderColor: Color = Color.Gray,
-    errorBorderColor: Color = ErrorBorderColor
+    errorBorderColor: Color = ErrorBorderColor,
 ) {
     OutlinedTextField(
         value = value,

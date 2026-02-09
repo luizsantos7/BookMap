@@ -153,7 +153,7 @@ fun LoginScreen(
             if (uiState.showRegisterDialog) {
                 CustomLoginDialog(
                     onDismissAction = {viewModel.dismissRegisterDialog()},
-                    onContinueAction = { },
+                    onContinueAction = { viewModel.onSubmitRegister(viewModel.uiState.value.userRegister) },
                     viewModel = viewModel
                 )
             }

@@ -1,20 +1,36 @@
 package com.example.bookmap.data.repository
 
+import android.util.Log
 import com.example.bookmap.data.dao.UserDao
+import com.example.bookmap.data.entity.UserEntity
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val userDao: UserDao
 ){
-    suspend fun createUser(userEntity: com.example.bookmap.data.entity.UserEntity) {
-        userDao.createuser(userEntity)
+    suspend fun createUser(user: UserEntity): Boolean {
+        Log.d("Register", "user.email = '${user.email}'")
+        return try {
+            if (user.email.isBlank()) {
+                return false
+            }
+
+            if (userDao.emailExists(user.email)) {
+                false
+            } else {
+                userDao.createuser(user)
+                true
+            }
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    suspend fun updateUser(userEntity: com.example.bookmap.data.entity.UserEntity) {
+    suspend fun updateUser(userEntity: UserEntity) {
         userDao.updateUser(userEntity)
     }
 
-    suspend fun getUserById(id: Int): com.example.bookmap.data.entity.UserEntity {
+    suspend fun getUserById(id: Int): UserEntity {
         return userDao.getUserById(id)
     }
 

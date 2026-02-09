@@ -12,7 +12,7 @@ data class UserEntity (
     val confirmEmail: String,
     val password: String,
     val birthday: String,
-    val genery: String,
+    val gender: String,
     val countType: CountType = CountType.GUEST,
     val followers: Int = 0,
     val following: Int = 0,

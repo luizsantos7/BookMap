@@ -32,17 +32,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.bookmap.presentation.login.LoginScreenAction
 import com.example.bookmap.presentation.login.LoginViewModel
+import com.example.bookmap.utils.components.GenderSelector
 import com.example.bookmap.utils.ui.theme.RegisterDialogBackground
 import com.example.bookmap.utils.components.OutlineTextComponent
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun CustomLoginDialog(
     onDismissAction: () -> Unit,
     onContinueAction: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -56,18 +62,37 @@ fun CustomLoginDialog(
             modifier = Modifier.padding(horizontal = 8.dp),
             onDismissAction = onDismissAction,
             onContinueAction = onContinueAction,
-            name = state.userRegister?.name ?: "",
-            email = state.userRegister?.email ?: "",
-            confirmEmail = state.userRegister?.confirmEmail ?: "",
-            password = state.userRegister?.password ?: "",
-            birthday = state.userRegister?.birthday ?: "",
-            genery = state.userRegister?.genery ?: "",
-            onNameChange = { },
-            onEmailChange = { },
-            onConfirmEmailChange = { },
-            onPasswordChange = { },
-            onBirthdayChange = { },
-            onGeneryChange = { }
+            name = state.userRegister.name, // Remova '?.'
+            email = state.userRegister.email,
+            confirmEmail = state.userRegister.confirmEmail,
+            password = state.userRegister.password,
+            birthday = state.userRegister.birthday,
+            gender = state.userRegister.gender,
+            onNameChange = { viewModel.onActionEvent(LoginScreenAction.RegisterNameChanged(it)) },
+            onEmailChange = { viewModel.onActionEvent(LoginScreenAction.RegisterEmailChanged(it)) },
+            onConfirmEmailChange = {
+                viewModel.onActionEvent(
+                    LoginScreenAction.RegisterConfirmEmailChanged(
+                        it
+                    )
+                )
+            },
+            onPasswordChange = {
+                viewModel.onActionEvent(
+                    LoginScreenAction.RegisterPasswordChanged(
+                        it
+                    )
+                )
+            },
+            onBirthdayChange = {
+                viewModel.onActionEvent(
+                    LoginScreenAction.RegisterBirthdayChanged(
+                        it
+                    )
+                )
+            },
+            onGeneryChange = { viewModel.onActionEvent(LoginScreenAction.RegisterGenderChanged(it)) },
+            enabled = viewModel.registerButtonEnabled()
         )
     }
 }
@@ -82,14 +107,17 @@ fun CustomLoginDialogContent(
     confirmEmail: String = "",
     password: String = "",
     birthday: String = "",
-    genery: String = "",
+    gender: String = "",
     onNameChange: (String) -> Unit = {},
     onEmailChange: (String) -> Unit = {},
     onConfirmEmailChange: (String) -> Unit = {},
     onPasswordChange: (String) -> Unit = {},
     onBirthdayChange: (String) -> Unit = {},
-    onGeneryChange: (String) -> Unit = {}
+    onGeneryChange: (String) -> Unit = {},
+    enabled: Boolean = false
 ) {
+    val context = LocalContext.current
+
     Box(
         modifier = modifier
             .background(color = RegisterDialogBackground, shape = RoundedCornerShape(16.dp))
@@ -195,13 +223,14 @@ fun CustomLoginDialogContent(
                     backgroundColor = Color.Transparent,
                     focusedBorderColor = Color.Gray,
                     unfocusedBorderColor = Color.LightGray,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
             }
 
             item {
                 OutlineTextComponent(
                     value = birthday,
-                    onValueChange = onBirthdayChange,
+                    onValueChange =  onBirthdayChange ,
                     label = "Data de Nascimento",
                     placeholder = "DD/MM/AAAA",
                     trailingIcon = {
@@ -211,22 +240,14 @@ fun CustomLoginDialogContent(
                     backgroundColor = Color.Transparent,
                     focusedBorderColor = Color.Gray,
                     unfocusedBorderColor = Color.LightGray,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
             }
 
             item {
-                OutlineTextComponent(
-                    value = genery,
-                    onValueChange = onGeneryChange,
-                    label = "Gênero",
-                    placeholder = "Digite seu gênero",
-                    trailingIcon = {
-                        Icon(Icons.Default.Person, contentDescription = "Ícone de pessoa")
-                    },
-                    textColor = Color.LightGray,
-                    backgroundColor = Color.Transparent,
-                    focusedBorderColor = Color.Gray,
-                    unfocusedBorderColor = Color.LightGray,
+                GenderSelector(
+                    selectedGender = gender,
+                    onGenderSelected = onGeneryChange
                 )
             }
 
@@ -250,7 +271,21 @@ fun CustomLoginDialogContent(
                     }
 
                     Button(
-                        onClick = onContinueAction,
+                        onClick = {
+                            try {
+                                if (!enabled) {
+                                    Toast.makeText(
+                                        context,
+                                        "Preencha todos os campos corretamente",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return@Button
+                                }
+                                onContinueAction()
+                            } catch (e: Exception) {
+                            }
+                        },
+                        enabled = enabled,
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFD7C9A0),
@@ -277,6 +312,6 @@ private fun PreviewDialog() {
         confirmEmail = "joao@email.com",
         password = "******",
         birthday = "01/01/2000",
-        genery = "Masculino"
+        gender = "Masculino"
     )
 }

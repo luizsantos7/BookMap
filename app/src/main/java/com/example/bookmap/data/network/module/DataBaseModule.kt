@@ -23,6 +23,7 @@ object DatabaseModule {
                 AppDatabase::class.java,
                 "BookMapDatabase"
             )
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 
