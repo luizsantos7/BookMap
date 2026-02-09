@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,9 +35,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bookmap.presentation.login.LoginViewModel
-import com.example.bookmap.presentation.ui.theme.RegisterDialogBackground
-import com.example.bookmap.presentation.ui.theme.UnfocusField
-import com.example.bookmap.presentation.ui.theme.focusFieldBorder
+import com.example.bookmap.utils.ui.theme.RegisterDialogBackground
 import com.example.bookmap.utils.components.OutlineTextComponent
 
 @Composable

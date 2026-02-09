@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.bookmap.presentation.login.logindialog.CustomLoginDialog
-import com.example.bookmap.presentation.ui.theme.UnfocusField
-import com.example.bookmap.presentation.ui.theme.focusFieldBorder
+import com.example.bookmap.utils.ui.theme.UnfocusField
+import com.example.bookmap.utils.ui.theme.focusFieldBorder
 import com.example.bookmap.utils.components.FixedButton
 import com.example.bookmap.utils.components.OutlineTextComponent
 import com.example.bookmap.utils.components.SignUpPrompt

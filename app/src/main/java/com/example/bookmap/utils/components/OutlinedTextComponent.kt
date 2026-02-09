@@ -1,6 +1,5 @@
 package com.example.bookmap.utils.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bookmap.presentation.ui.theme.ErrorBorderColor
+import com.example.bookmap.utils.ui.theme.ErrorBorderColor
 
 @Composable
 fun OutlineTextComponent(

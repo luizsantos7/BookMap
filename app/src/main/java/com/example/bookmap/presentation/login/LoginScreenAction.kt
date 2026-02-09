@@ -9,7 +9,6 @@ sealed class LoginScreenAction {
     data class EmailChanged(val newEmail: String) : LoginScreenAction()
     data class PasswordChanged(val newPassword: String) : LoginScreenAction()
     class SubmitLogin(val email: String, val password: String) : LoginScreenAction()
-
     class newRegister() : LoginScreenAction()
 
 }
