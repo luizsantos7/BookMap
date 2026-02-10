@@ -1,14 +1,26 @@
 package com.example.bookmap.presentation.login
 
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.entity.UserEntity
 import com.example.bookmap.data.repository.UserRepository
-import com.example.bookmap.presentation.login.LoginScreenAction.*
+import com.example.bookmap.presentation.login.LoginScreenAction.EmailChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.PasswordChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.RegisterBirthdayChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.RegisterConfirmEmailChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.RegisterEmailChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.RegisterGenderChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.RegisterNameChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.RegisterPasswordChanged
+import com.example.bookmap.presentation.login.LoginScreenAction.SubmitLogin
+import com.example.bookmap.presentation.login.LoginScreenAction.SubmitRegister
+import com.example.bookmap.presentation.login.LoginScreenAction.newRegister
+import com.example.bookmap.utils.constants.EMPTY_STRING
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -18,6 +30,9 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState
+
+    private val _navigationEvent = MutableSharedFlow<String>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun onActionEvent(action: LoginScreenAction) {
         when (action) {
@@ -32,15 +47,15 @@ class LoginViewModel @Inject constructor(
             is RegisterBirthdayChanged -> onBirthdayRegisterChange(action.birthday)
             is RegisterGenderChanged -> onGenderRegisterChange(action.gender)
             is SubmitRegister -> onSubmitRegister(action.userEntity)
-            //is CancelRegister -> onCancelRegister()
         }
     }
 
     fun onSubmitLogin(email: String, password: String) {
         viewModelScope.launch {
-            val userFound = userRepository.loginUser(email = email, password = password)
+            val userFound = userRepository.loginUser(email, password)
             if (userFound) {
                 _uiState.value = LoginUiState(isLoading = false, showError = false)
+                _navigationEvent.emit("home_screen")
             } else {
                 _uiState.value = LoginUiState(isLoading = false, showError = true)
             }
@@ -75,25 +90,62 @@ class LoginViewModel @Inject constructor(
     }
 
     //REGISTER FUNCTIONS
+    private fun validateEmails(email: String, confirmEmail: String): Boolean {
+        return when {
+            email.isBlank() || confirmEmail.isBlank() -> {
+                _uiState.update {
+                    it.copy(
+                        showError = true,
+                        errorMessage = "Por favor, preencha ambos os campos de e‑mail"
+                    )
+                }
+                false
+            }
+
+            email != confirmEmail -> {
+                _uiState.update {
+                    it.copy(showError = true, errorMessage = "Os e‑mails não coincidem")
+                }
+                false
+            }
+
+            else -> {
+                _uiState.update {
+                    it.copy(showError = false, errorMessage = EMPTY_STRING)
+                }
+                true
+            }
+        }
+    }
+
     fun onSubmitRegister(userEntity: UserEntity) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            val success = userRepository.createUser(userEntity)
+            _uiState.update { it.copy(isLoading = true, showError = false) }
 
-            if (success) {
+            if (!validateEmails(userEntity.email, userEntity.confirmEmail)) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        showError = false,
+                        showError = true,
+                        errorMessage = "Os e-mails não coincidem"
+                    )
+                }
+                return@launch
+            }
+            val success = userRepository.createUser(userEntity)
+
+            _uiState.update {
+                if (success) {
+                    it.copy(
+                        isLoading = false,
                         showRegisterDialog = false,
                         userRegister = userEntity
                     )
-                }
-            } else {
-                _uiState.update {
+                } else {
                     it.copy(
                         isLoading = false,
-                        showError = true
+                        showError = true,
+                        errorMessage = "Email já cadastrado!"
                     )
                 }
             }
@@ -135,7 +187,13 @@ class LoginViewModel @Inject constructor(
         val limited = digits.take(8)
 
         val formatted = when {
-            limited.length >= 5 -> "${limited.substring(0, 2)}/${limited.substring(2, 4)}/${limited.substring(4)}"
+            limited.length >= 5 -> "${limited.substring(0, 2)}/${
+                limited.substring(
+                    2,
+                    4
+                )
+            }/${limited.substring(4)}"
+
             limited.length >= 3 -> "${limited.substring(0, 2)}/${limited.substring(2)}"
             limited.isNotEmpty() -> limited
             else -> ""

@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import com.example.bookmap.data.dao.UserDao
 import com.example.bookmap.data.entity.UserEntity
 
-@Database(entities = [UserEntity::class], version = 1, exportSchema = false)
+@Database(entities = [UserEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 

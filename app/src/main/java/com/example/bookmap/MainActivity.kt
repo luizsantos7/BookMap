@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import com.example.bookmap.navigation.AppNavHost
 import com.example.bookmap.presentation.login.LoginScreen
 import com.example.bookmap.utils.ui.theme.BookMapTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             BookMapTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginScreen(
+                    AppNavHost(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

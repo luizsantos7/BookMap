@@ -63,6 +63,14 @@ dependencies {
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("androidx.compose.material:material-icons-extended")
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

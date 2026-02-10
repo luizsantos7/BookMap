@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.bookmap.presentation.login.logindialog.CustomLoginDialog
 import com.example.bookmap.utils.ui.theme.UnfocusField
 import com.example.bookmap.utils.ui.theme.focusFieldBorder
@@ -45,12 +46,12 @@ import kotlinx.coroutines.delay
 fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var visible by remember { mutableStateOf(false) }
     val email = uiState.email
     val password = uiState.password
-
 
     LaunchedEffect(uiState.showError) {
         if (uiState.showError) {
@@ -61,8 +62,16 @@ fun LoginScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvent.collect { route ->
+            navController.navigate(route) {
+                popUpTo("login") { inclusive = true }
+            }
+        }
+    }
+
     Image(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         painter = painterResource(id = com.example.bookmap.R.drawable.login),
         contentDescription = "Login Image",
         contentScale = ContentScale.Crop
@@ -80,7 +89,7 @@ fun LoginScreen(
             )
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -137,11 +146,11 @@ fun LoginScreen(
             }
             FixedButton(
                 primaryButtonText = "Entrar",
-                secundaryButtonText = "Continuar como convidado",
+                secundaryButtonText = "Continuar como convidado 🔒",
                 primaryClickButton = {
                     viewModel.onSubmitLogin(email = email, password = password)
                 },
-                secundaryClickButton = { /* ação visitante */ },
+                secundaryClickButton = { },
                 modifier = Modifier
                     .padding(horizontal = 48.dp),
                 enabled = viewModel.enableLoginButton()
@@ -165,5 +174,4 @@ fun LoginScreen(
 @Preview
 @Composable
 private fun SDsd() {
-    LoginScreen()
 }

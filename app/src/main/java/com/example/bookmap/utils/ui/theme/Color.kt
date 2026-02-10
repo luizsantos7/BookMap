@@ -23,5 +23,4 @@ val focusFieldBorder = Color(0xFF353A46)
 
 // RegisterDialog
 
-//val RegisterDialogBackground = Color(0xFFD7C9A0)
 val RegisterDialogBackground = Color(0xFF1D1D25)

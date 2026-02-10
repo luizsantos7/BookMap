@@ -7,16 +7,13 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val userDao: UserDao
-){
+) {
     suspend fun createUser(user: UserEntity): Boolean {
-        Log.d("Register", "user.email = '${user.email}'")
         return try {
-            if (user.email.isBlank()) {
-                return false
-            }
+            val emailExists = userDao.emailExists(user.email)
 
-            if (userDao.emailExists(user.email)) {
-                false
+            if (emailExists) {
+                return false
             } else {
                 userDao.createuser(user)
                 true

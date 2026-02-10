@@ -40,9 +40,17 @@ import com.example.bookmap.utils.ui.theme.RegisterDialogBackground
 import com.example.bookmap.utils.components.OutlineTextComponent
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bookmap.presentation.login.LoginUiState
+import kotlinx.coroutines.delay
 
 @Composable
 fun CustomLoginDialog(
@@ -62,6 +70,7 @@ fun CustomLoginDialog(
             modifier = Modifier.padding(horizontal = 8.dp),
             onDismissAction = onDismissAction,
             onContinueAction = onContinueAction,
+            state = state,
             name = state.userRegister.name, // Remova '?.'
             email = state.userRegister.email,
             confirmEmail = state.userRegister.confirmEmail,
@@ -104,6 +113,7 @@ fun CustomLoginDialogContent(
     onContinueAction: () -> Unit,
     name: String = "",
     email: String = "",
+    state: LoginUiState,
     confirmEmail: String = "",
     password: String = "",
     birthday: String = "",
@@ -230,7 +240,7 @@ fun CustomLoginDialogContent(
             item {
                 OutlineTextComponent(
                     value = birthday,
-                    onValueChange =  onBirthdayChange ,
+                    onValueChange = onBirthdayChange,
                     label = "Data de Nascimento",
                     placeholder = "DD/MM/AAAA",
                     trailingIcon = {
@@ -252,6 +262,37 @@ fun CustomLoginDialogContent(
             }
 
             item {
+                var showErrorMessage by remember { mutableStateOf(false) }
+
+                LaunchedEffect(state.errorMessage) {
+                    if (state.showError && state.errorMessage.isNotBlank()) {
+                        showErrorMessage = true
+                        delay(2000L)
+                        onDismissAction()
+                        showErrorMessage = false
+                    }
+                }
+
+                AnimatedVisibility(visible = showErrorMessage) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = Color.Red.copy(alpha = 0.1f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = state.errorMessage,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -272,18 +313,7 @@ fun CustomLoginDialogContent(
 
                     Button(
                         onClick = {
-                            try {
-                                if (!enabled) {
-                                    Toast.makeText(
-                                        context,
-                                        "Preencha todos os campos corretamente",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    return@Button
-                                }
-                                onContinueAction()
-                            } catch (e: Exception) {
-                            }
+                            onContinueAction()
                         },
                         enabled = enabled,
                         modifier = Modifier.weight(1f),
@@ -299,19 +329,4 @@ fun CustomLoginDialogContent(
             }
         }
     }
-}
-
-@Preview(showBackground = true, widthDp = 400, heightDp = 700)
-@Composable
-private fun PreviewDialog() {
-    CustomLoginDialogContent(
-        onDismissAction = { },
-        onContinueAction = { },
-        name = "João Silva",
-        email = "joao@email.com",
-        confirmEmail = "joao@email.com",
-        password = "******",
-        birthday = "01/01/2000",
-        gender = "Masculino"
-    )
 }

@@ -11,6 +11,7 @@ data class LoginUiState(
     val isContinue: Boolean = false,
     val showRegisterDialog: Boolean = false,
     val showError: Boolean = false,
+    val errorMessage: String = EMPTY_STRING,
     val userRegister : UserEntity = UserEntity(
         name = EMPTY_STRING,
         email = EMPTY_STRING,

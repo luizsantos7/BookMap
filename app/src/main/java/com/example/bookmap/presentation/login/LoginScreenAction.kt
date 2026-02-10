@@ -20,6 +20,5 @@ sealed class LoginScreenAction {
     data class RegisterBirthdayChanged(val birthday: String) : LoginScreenAction()
     data class RegisterGenderChanged(val gender: String) : LoginScreenAction()
     data class SubmitRegister(val userEntity : UserEntity) : LoginScreenAction()
-    //data object CancelRegister : LoginScreenAction()
 
 }
