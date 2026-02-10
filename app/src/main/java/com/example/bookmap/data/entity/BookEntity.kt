@@ -9,6 +9,6 @@ data class BookEntity(
     val summaries: List<String>,
     val languages: List<String>,
     val coverUrl: String? = null,
-    val isRead : ReadStatus = ReadStatus.UNREAD
+    val isRead: ReadStatus = ReadStatus.UNREAD
 )
 

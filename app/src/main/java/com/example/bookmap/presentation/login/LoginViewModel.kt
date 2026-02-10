@@ -54,10 +54,10 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             val userFound = userRepository.loginUser(email, password)
             if (userFound) {
-                _uiState.value = LoginUiState(isLoading = false, showError = false)
+                _uiState.value = LoginUiState( showError = false)
                 _navigationEvent.emit("home_screen")
             } else {
-                _uiState.value = LoginUiState(isLoading = false, showError = true)
+                _uiState.value = LoginUiState( showError = true)
             }
         }
     }
@@ -120,12 +120,11 @@ class LoginViewModel @Inject constructor(
 
     fun onSubmitRegister(userEntity: UserEntity) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, showError = false) }
+            _uiState.update { it.copy(showError = false) }
 
             if (!validateEmails(userEntity.email, userEntity.confirmEmail)) {
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
                         showError = true,
                         errorMessage = "Os e-mails não coincidem"
                     )
@@ -136,14 +135,14 @@ class LoginViewModel @Inject constructor(
 
             _uiState.update {
                 if (success) {
+                    _navigationEvent.emit("home_screen")
                     it.copy(
-                        isLoading = false,
                         showRegisterDialog = false,
                         userRegister = userEntity
                     )
+
                 } else {
                     it.copy(
-                        isLoading = false,
                         showError = true,
                         errorMessage = "Email já cadastrado!"
                     )

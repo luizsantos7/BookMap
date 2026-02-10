@@ -233,6 +233,7 @@ fun CustomLoginDialogContent(
                     backgroundColor = Color.Transparent,
                     focusedBorderColor = Color.Gray,
                     unfocusedBorderColor = Color.LightGray,
+                    isError = password.length < 6 && password.isNotEmpty(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
             }

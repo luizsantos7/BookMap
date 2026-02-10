@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.House
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -41,7 +44,7 @@ fun Footer(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.Home,
+                imageVector = Icons.Default.House,
                 contentDescription = "Home icon",
                 tint = Color.White,
                 modifier = Modifier.size(22.dp)
@@ -56,7 +59,7 @@ fun Footer(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.BookmarkBorder,
+                imageVector = Icons.Default.Bookmark,
                 contentDescription = "Home icon",
                 tint = Color.White,
                 modifier = Modifier.size(22.dp)
@@ -71,7 +74,7 @@ fun Footer(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.PersonOutline,
+                imageVector = Icons.Default.Person,
                 contentDescription = "Home icon",
                 tint = Color.White,
                 modifier = Modifier.size(22.dp)

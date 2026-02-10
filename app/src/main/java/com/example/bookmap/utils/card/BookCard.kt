@@ -1,5 +1,6 @@
 package com.example.bookmap.utils.card
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -22,19 +23,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.bookmap.data.entity.AuthorEntity
 import com.example.bookmap.utils.constants.EMPTY_STRING
 
 @Composable
 fun BookCard(
     title: String = "Book Title",
-    author: String = "Book Author",
-    imageCover: String = EMPTY_STRING,
+    author: List<AuthorEntity> = listOf(),
+    imageCover: String? = EMPTY_STRING,
     modifier: Modifier = Modifier
 ) {
+
+    Log.d("BookCard", "Image URL: $imageCover")
+
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .height(140.dp)
+            .height(175.dp)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF15191E)),
         shape = RoundedCornerShape(12.dp),
@@ -46,16 +51,23 @@ fun BookCard(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                model = imageCover.ifEmpty { "https://www.gutenberg.org/cache/epub/84/pg84.cover.medium.jpg" },
-                contentDescription = title,
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
-                    .width(70.dp)
-                    .height(100.dp)
-                    .background(Color.DarkGray, RoundedCornerShape(8.dp))
+                    .width(89.dp)
+                    .height(160.dp)
                     .clip(RoundedCornerShape(8.dp))
-            )
+                    .background(Color.DarkGray)
+            ) {
+                AsyncImage(
+                    model = imageCover,
+                    contentDescription = title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    onLoading = { Log.d("BookCard", "Loading image...") },
+                    onSuccess = { Log.d("BookCard", "Image loaded!") },
+                    onError = { Log.e("BookCard", "Error: ${it.result.throwable.message}") }
+                )
+            }
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -78,7 +90,7 @@ fun BookCard(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = author,
+                        text = author.joinToString(", ") { it.name },
                         color = Color.LightGray,
                         fontSize = 14.sp,
                         maxLines = 2,
@@ -102,7 +114,6 @@ fun BookCard(
 private fun BookCardPreview() {
     BookCard(
         title = "Frankenstein; Or, The Modern Prometheus",
-        author = "Mary Wollstonecraft Shelley",
         imageCover = "https://www.gutenberg.org/cache/epub/84/pg84.cover.medium.jpg"
     )
 }

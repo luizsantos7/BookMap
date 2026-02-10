@@ -150,7 +150,7 @@ fun LoginScreen(
                 primaryClickButton = {
                     viewModel.onSubmitLogin(email = email, password = password)
                 },
-                secundaryClickButton = { },
+                secundaryClickButton = {navController.navigate("home_screen")},
                 modifier = Modifier
                     .padding(horizontal = 48.dp),
                 enabled = viewModel.enableLoginButton()
