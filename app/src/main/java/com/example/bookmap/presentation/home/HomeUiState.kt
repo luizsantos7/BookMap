@@ -11,6 +11,7 @@ data class HomeUiState(
     val isLoading: Boolean = false,
     val isContinue: Boolean = false,
     val showError: Boolean = false,
+    val isEmpty : Boolean = false,
     val errorMessage: String = "",
     val totalBooks: Long = 0,
     val nextUrl: String? = null,

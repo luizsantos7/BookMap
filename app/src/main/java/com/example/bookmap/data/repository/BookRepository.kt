@@ -8,16 +8,9 @@ import javax.inject.Inject
 class BookRepository @Inject constructor(
     private val bookApi: BookApi
 ) {
-    suspend fun buscarLivroPorId(id: Int): Result<BookEntity> {
-        return try {
-            val response = bookApi.listarLivroPorId(id)
-            val book = response.toEntity()
-            Result.success(book)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    suspend fun buscarLivroPorNome(name: String): Result<List<BookEntity>> = runCatching {
+        bookApi.listarLivrosPorNome(name).results.map { it.toEntity() }
     }
-
 
     suspend fun buscarTodosLivros(): Result<List<BookEntity>> = runCatching {
         bookApi.listarLivros().results.map { it.toEntity() }

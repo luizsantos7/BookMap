@@ -4,4 +4,6 @@ sealed class HomeScreenAction{
 
     data object ClickSearchIcon: HomeScreenAction()
     data class onSearchABook(val bookName : String) : HomeScreenAction()
+
+    data class getBookBySearch(val bookName: String) : HomeScreenAction()
 }
