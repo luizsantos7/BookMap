@@ -3,6 +3,9 @@ package com.example.bookmap.data.network
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.bookmap.data.converter.BookListConverter
+import com.example.bookmap.data.converter.CountTypeConverter
 import com.example.bookmap.data.dao.UserDao
 import com.example.bookmap.data.entity.UserEntity
 

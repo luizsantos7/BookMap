@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.bookmap.data.entity.BookEntity
 import com.example.bookmap.presentation.home.HomeScreenAction.*
 import com.example.bookmap.utils.card.BookCard
 import com.example.bookmap.utils.components.ErrorContent
@@ -52,6 +53,7 @@ fun HomeScreen(
             viewModel.onActionEvent(OnSearchABook(bookName))
         },
         modifier = modifier,
+        onFavorited ={book -> viewModel.onActionEvent(HomeScreenAction.OnFavorited(book))},
         onRetry = { viewModel.onActionEvent(OnRetry) },
     )
 }
@@ -63,6 +65,7 @@ private fun HomeScreenContent(
     onRetry: () -> Unit,
     onSearchBook: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onFavorited: (BookEntity) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -84,7 +87,7 @@ private fun HomeScreenContent(
             ) {
                 OutlineTextComponent(
                     value = uiState.searchBookText,
-                    onValueChange = onSearchBook, // Filtra em tempo real
+                    onValueChange = onSearchBook,
                     textColor = Color.Gray,
                     backgroundColor = UnfocusField,
                     focusedBorderColor = focusFieldBorder,
@@ -167,7 +170,8 @@ private fun HomeScreenContent(
                         BookCard(
                             title = item.title,
                             author = item.authors,
-                            imageCover = item.coverUrl
+                            imageCover = item.coverUrl,
+                            onFavorited = {onFavorited(item)}
                         )
                     }
                 }

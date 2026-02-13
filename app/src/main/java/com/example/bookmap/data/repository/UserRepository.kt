@@ -3,6 +3,7 @@ package com.example.bookmap.data.repository
 import android.util.Log
 import com.example.bookmap.data.dao.UserDao
 import com.example.bookmap.data.entity.UserEntity
+import com.example.bookmap.data.entity.enum.CountType
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -15,6 +16,7 @@ class UserRepository @Inject constructor(
             if (emailExists) {
                 return false
             } else {
+                user.countType = CountType.USER
                 userDao.createuser(user)
                 true
             }

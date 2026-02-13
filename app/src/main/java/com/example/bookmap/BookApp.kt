@@ -16,11 +16,9 @@ import java.net.InetAddress
 class BookApp : Application(), ImageLoaderFactory {
 
     override fun newImageLoader(): ImageLoader {
-        // OkHttpClient customizado que força IPv4
         val okHttpClient = OkHttpClient.Builder()
             .dns(object : Dns {
                 override fun lookup(hostname: String): List<InetAddress> {
-                    // Força o uso apenas de endereços IPv4
                     return Dns.SYSTEM.lookup(hostname)
                         .filter { it is Inet4Address }
                 }
@@ -28,7 +26,7 @@ class BookApp : Application(), ImageLoaderFactory {
             .build()
 
         return ImageLoader.Builder(this)
-            .okHttpClient(okHttpClient) // Usa o cliente customizado
+            .okHttpClient(okHttpClient)
             .crossfade(true)
             .memoryCache {
                 MemoryCache.Builder(this)

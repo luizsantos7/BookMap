@@ -2,9 +2,13 @@ package com.example.bookmap.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bookmap.data.entity.BookEntity
+import com.example.bookmap.data.entity.enum.CountType
 import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
 import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
+import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
+import com.example.bookmap.presentation.home.HomeScreenAction.OnRetry
 import com.example.bookmap.presentation.home.HomeScreenAction.OnSearchABook
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -32,7 +36,15 @@ class HomeViewModel @Inject constructor(
             is ClickSearchIcon -> onClickSearchIcon()
             is OnSearchABook -> onSearchBook(bookName = action.bookName)
             is GetBookBySearch -> onGetBookByName()
-            HomeScreenAction.OnRetry -> getBooks()
+            is OnFavorited -> favoriteBook(action.book)
+            OnRetry -> getBooks()
+        }
+    }
+
+    private fun favoriteBook(book: BookEntity) {
+        if (_uiState.value.user.countType == CountType.USER) {
+            book.isFavorited = true
+            _uiState.value.user.favoritedBooks.add(book)
         }
     }
 
@@ -71,7 +83,6 @@ class HomeViewModel @Inject constructor(
             getBooks()
             return
         }
-
         _uiState.update { it.copy(isLoading = true, showError = false) }
 
         viewModelScope.launch {
