@@ -1,8 +1,11 @@
 package com.example.bookmap.data.repository
 
-import android.util.Log
 import com.example.bookmap.data.dao.UserDao
+import com.example.bookmap.data.entity.BookEntity
+import com.example.bookmap.data.entity.FavoriteBookEntity
 import com.example.bookmap.data.entity.UserEntity
+import com.example.bookmap.data.entity.UserFavoriteBookCrossRef
+import com.example.bookmap.data.entity.UserWithFavoriteBooks
 import com.example.bookmap.data.entity.enum.CountType
 import javax.inject.Inject
 
@@ -12,9 +15,8 @@ class UserRepository @Inject constructor(
     suspend fun createUser(user: UserEntity): Boolean {
         return try {
             val emailExists = userDao.emailExists(user.email)
-
             if (emailExists) {
-                return false
+                false
             } else {
                 user.countType = CountType.USER
                 userDao.createuser(user)
@@ -25,15 +27,26 @@ class UserRepository @Inject constructor(
         }
     }
 
-    suspend fun updateUser(userEntity: UserEntity) {
-        userDao.updateUser(userEntity)
+    suspend fun updateUser(userEntity: UserEntity) = userDao.updateUser(userEntity)
+    suspend fun getUserById(id: Int) = userDao.getUserById(id)
+    suspend fun loginUser(email: String, password: String) = userDao.loginUser(email, password)
+
+    suspend fun addFavoriteBook(userId: Int, book: BookEntity) {
+        val localBook = FavoriteBookEntity(
+            id = book.id,
+            title = book.title,
+            coverUrl = book.coverUrl
+        )
+
+        userDao.insertFavoriteBook(localBook)
+        userDao.insertUserFavoriteBook(UserFavoriteBookCrossRef(userId, localBook.id))
     }
 
-    suspend fun getUserById(id: Int): UserEntity {
-        return userDao.getUserById(id)
+    suspend fun removeFavoriteBook(userId: Int, bookId: Int) {
+        userDao.deleteUserFavoriteBook(userId, bookId)
     }
 
-    suspend fun loginUser(email: String, password: String): Boolean {
-        return userDao.loginUser(email, password)
+    suspend fun getUserWithFavoriteBooks(userId: Int): UserWithFavoriteBooks {
+        return userDao.getUserWithFavoriteBooks(userId)
     }
 }

@@ -3,13 +3,20 @@ package com.example.bookmap.data.network
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.example.bookmap.data.converter.BookListConverter
-import com.example.bookmap.data.converter.CountTypeConverter
 import com.example.bookmap.data.dao.UserDao
+import com.example.bookmap.data.entity.FavoriteBookEntity
 import com.example.bookmap.data.entity.UserEntity
+import com.example.bookmap.data.entity.UserFavoriteBookCrossRef
 
-@Database(entities = [UserEntity::class], version = 2, exportSchema = false)
+
+@Database(
+        entities = [
+            UserEntity::class,
+            FavoriteBookEntity::class,
+            UserFavoriteBookCrossRef::class
+        ],
+        version = 3
+    )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 

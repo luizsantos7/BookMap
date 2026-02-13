@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.entity.BookEntity
 import com.example.bookmap.data.entity.enum.CountType
 import com.example.bookmap.data.repository.BookRepository
+import com.example.bookmap.data.repository.UserRepository
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
 import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
 import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
@@ -20,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    val bookRepository: BookRepository
+    val bookRepository: BookRepository,
+    val userRepository: UserRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState
@@ -42,12 +44,20 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun favoriteBook(book: BookEntity) {
-        if (_uiState.value.user.countType == CountType.USER) {
-            book.isFavorited = true
-            _uiState.value.user.favoritedBooks.add(book)
+        val user = _uiState.value.user
+        if (user.countType == CountType.USER) {
+            viewModelScope.launch {
+                userRepository.addFavoriteBook(user.id, book)
+                _uiState.update { ui ->
+                    ui.copy(
+                        filteredBooks = ui.filteredBooks.map {
+                            if (it.id == book.id) it.copy(isFavorited = true) else it
+                        }
+                    )
+                }
+            }
         }
     }
-
     private fun getBooks() {
         _uiState.update { it.copy(isLoading = true, showError = false, isContinue = false) }
 
