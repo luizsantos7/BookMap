@@ -118,7 +118,7 @@ fun LoginScreen(
                     textColor = Color.Gray,
                     placeholder = "Digite seu e-mail",
                     leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                    modifier = Modifier.padding(horizontal = 32.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
                 )
                 OutlineTextComponent(
                     value = password,
@@ -133,7 +133,7 @@ fun LoginScreen(
                     placeholder = "Digite sua senha",
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     isError = password.length < 6 && password.isNotEmpty(),
-                    modifier = Modifier.padding(horizontal = 32.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
                 )
 
             }

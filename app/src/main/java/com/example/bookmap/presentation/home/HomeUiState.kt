@@ -6,13 +6,11 @@ import com.example.bookmap.utils.constants.EMPTY_STRING
 
 data class HomeUiState(
     val searchBook: Boolean = false,
-    val searchBookText: String = EMPTY_STRING,
-    val listBook : List<BookEntity> = listOf(),
+    val searchBookText: String = "",
+    val listBook: List<BookEntity> = emptyList(),
+    val filteredBooks: List<BookEntity> = emptyList(),
     val isLoading: Boolean = false,
-    val isContinue: Boolean = false,
     val showError: Boolean = false,
-    val isEmpty : Boolean = false,
-    val errorMessage: String = "",
-    val totalBooks: Long = 0,
-    val nextUrl: String? = null,
+    val isContinue: Boolean = false,
+    val errorMessage: String = ""
 )

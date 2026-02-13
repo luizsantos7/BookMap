@@ -63,8 +63,7 @@ fun OutlineTextComponent(
         shape = RoundedCornerShape(16.dp),
         isError = isError,
         textStyle = TextStyle(color = textColor),
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedContainerColor = backgroundColor,
             focusedContainerColor = backgroundColor,
@@ -100,7 +99,7 @@ fun OutlineTextFieldPreview() {
             onValueChange = { text = it },
             label = "E-mail",
             placeholder = "Digite seu e-mail",
-            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) }
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null,) }
         )
 
         OutlineTextComponent(

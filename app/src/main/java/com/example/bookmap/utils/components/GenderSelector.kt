@@ -37,13 +37,14 @@ fun GenderSelector(
     ) {
         OutlinedTextField(
             value = selectedGender,
-            onValueChange = {}, // Não muda direto aqui
+            onValueChange = {},
             shape = RoundedCornerShape(16.dp),
             label = { Text("Gênero") },
             readOnly = true,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 10.dp)
                 .menuAnchor(),
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = Color.Transparent,

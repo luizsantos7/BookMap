@@ -68,7 +68,7 @@ fun CustomLoginDialog(
             onDismissAction = onDismissAction,
             onContinueAction = onContinueAction,
             state = state,
-            name = state.userRegister.name, // Remova '?.'
+            name = state.userRegister.name,
             email = state.userRegister.email,
             confirmEmail = state.userRegister.confirmEmail,
             password = state.userRegister.password,
@@ -173,6 +173,7 @@ fun CustomLoginDialogContent(
                 OutlineTextComponent(
                     value = name,
                     onValueChange = onNameChange,
+                    modifier = modifier.fillMaxWidth(),
                     label = "Nome",
                     placeholder = "Digite seu nome",
                     trailingIcon = {
@@ -189,6 +190,7 @@ fun CustomLoginDialogContent(
                 OutlineTextComponent(
                     value = email,
                     onValueChange = onEmailChange,
+                    modifier = modifier.fillMaxWidth(),
                     label = "Email",
                     placeholder = "Digite seu email",
                     trailingIcon = {
@@ -205,6 +207,7 @@ fun CustomLoginDialogContent(
                 OutlineTextComponent(
                     value = confirmEmail,
                     onValueChange = onConfirmEmailChange,
+                    modifier = modifier.fillMaxWidth(),
                     label = "Confirmar Email",
                     placeholder = "Confirme seu email",
                     trailingIcon = {
@@ -221,6 +224,7 @@ fun CustomLoginDialogContent(
                 OutlineTextComponent(
                     value = password,
                     onValueChange = onPasswordChange,
+                    modifier = modifier.fillMaxWidth(),
                     label = "Senha",
                     placeholder = "Digite sua senha",
                     trailingIcon = {
@@ -239,6 +243,7 @@ fun CustomLoginDialogContent(
                 OutlineTextComponent(
                     value = birthday,
                     onValueChange = onBirthdayChange,
+                    modifier = modifier.fillMaxWidth(),
                     label = "Data de Nascimento",
                     placeholder = "DD/MM/AAAA",
                     trailingIcon = {
