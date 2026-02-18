@@ -47,8 +47,6 @@ fun BookCard(
     isFavorited: Boolean = false
 ) {
 
-    Log.d("BookCard", "Image URL: $imageCover")
-
     Card(
         modifier = modifier
             .fillMaxWidth()

@@ -28,25 +28,36 @@ class UserRepository @Inject constructor(
     }
 
     suspend fun updateUser(userEntity: UserEntity) = userDao.updateUser(userEntity)
+
     suspend fun getUserById(id: Int) = userDao.getUserById(id)
     suspend fun loginUser(email: String, password: String) = userDao.loginUser(email, password)
 
-    suspend fun addFavoriteBook(userId: Int, book: BookEntity) {
-        val localBook = FavoriteBookEntity(
-            id = book.id,
-            title = book.title,
-            coverUrl = book.coverUrl
-        )
+    //FAVORITE METODOS
+    suspend fun toggleFavoriteBook(userId: Int, book: BookEntity) {
+        val userWithFavorites = userDao.getUserWithFavoriteBooks(userId)
 
-        userDao.insertFavoriteBook(localBook)
-        userDao.insertUserFavoriteBook(UserFavoriteBookCrossRef(userId, localBook.id))
+        if (userWithFavorites == null) {
+            return
+        }
+
+        val isFavorite = userWithFavorites.favoriteBooks.any { it.id == book.id }
+
+        if (isFavorite) {
+            userDao.deleteUserFavoriteBook(userId, book.id)
+        } else {
+            val localBook = FavoriteBookEntity(
+                id = book.id,
+                title = book.title,
+                coverUrl = book.coverUrl
+            )
+            userDao.insertFavoriteBook(localBook)
+            userDao.insertUserFavoriteBook(
+                UserFavoriteBookCrossRef(userId, localBook.id)
+            )
+        }
     }
 
-    suspend fun removeFavoriteBook(userId: Int, bookId: Int) {
-        userDao.deleteUserFavoriteBook(userId, bookId)
-    }
-
-    suspend fun getUserWithFavoriteBooks(userId: Int): UserWithFavoriteBooks {
-        return userDao.getUserWithFavoriteBooks(userId)
-    }
+//    suspend fun getUserWithFavoriteBooks(userId: Int): UserWithFavoriteBooks {
+//        return userDao.getUserWithFavoriteBooks(userId)
+//    }
 }

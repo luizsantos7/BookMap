@@ -47,11 +47,15 @@ class HomeViewModel @Inject constructor(
         val user = _uiState.value.user
         if (user.countType == CountType.USER) {
             viewModelScope.launch {
-                userRepository.addFavoriteBook(user.id, book)
+                userRepository.toggleFavoriteBook(user.id, book)
+
                 _uiState.update { ui ->
                     ui.copy(
                         filteredBooks = ui.filteredBooks.map {
-                            if (it.id == book.id) it.copy(isFavorited = true) else it
+                            if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
+                        },
+                        listBook = ui.listBook.map {
+                            if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
                         }
                     )
                 }

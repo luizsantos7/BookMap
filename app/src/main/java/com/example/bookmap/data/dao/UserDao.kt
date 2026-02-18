@@ -42,5 +42,5 @@ interface UserDao {
 
     @Transaction
     @Query("SELECT * FROM users WHERE id = :userId")
-    suspend fun getUserWithFavoriteBooks(userId: Int): UserWithFavoriteBooks
+    suspend fun getUserWithFavoriteBooks(userId: Int): UserWithFavoriteBooks?
 }

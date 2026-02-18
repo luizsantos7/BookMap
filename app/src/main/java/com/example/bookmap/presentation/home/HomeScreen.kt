@@ -53,7 +53,7 @@ fun HomeScreen(
             viewModel.onActionEvent(OnSearchABook(bookName))
         },
         modifier = modifier,
-        onFavorited ={book -> viewModel.onActionEvent(HomeScreenAction.OnFavorited(book))},
+        onFavorited ={book -> viewModel.onActionEvent(OnFavorited(book))},
         onRetry = { viewModel.onActionEvent(OnRetry) },
     )
 }
@@ -171,7 +171,8 @@ private fun HomeScreenContent(
                             title = item.title,
                             author = item.authors,
                             imageCover = item.coverUrl,
-                            onFavorited = {onFavorited(item)}
+                            onFavorited = {onFavorited(item)},
+                            isFavorited = item.isFavorited
                         )
                     }
                 }
