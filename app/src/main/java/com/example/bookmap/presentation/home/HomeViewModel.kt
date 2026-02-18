@@ -3,6 +3,7 @@ package com.example.bookmap.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.entity.BookEntity
+import com.example.bookmap.data.entity.UserEntity
 import com.example.bookmap.data.entity.enum.CountType
 import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.data.repository.UserRepository
@@ -11,6 +12,7 @@ import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
 import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
 import com.example.bookmap.presentation.home.HomeScreenAction.OnRetry
 import com.example.bookmap.presentation.home.HomeScreenAction.OnSearchABook
+import com.example.bookmap.presentation.home.HomeScreenAction.SetUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -39,13 +41,14 @@ class HomeViewModel @Inject constructor(
             is OnSearchABook -> onSearchBook(bookName = action.bookName)
             is GetBookBySearch -> onGetBookByName()
             is OnFavorited -> favoriteBook(action.book)
+            is SetUser -> setNewUser(action.user)
             OnRetry -> getBooks()
         }
     }
 
     private fun favoriteBook(book: BookEntity) {
         val user = _uiState.value.user
-        if (user.countType == CountType.USER) {
+        if (user.countType == CountType.USER.name) {
             viewModelScope.launch {
                 userRepository.toggleFavoriteBook(user.id, book)
 
@@ -145,5 +148,11 @@ class HomeViewModel @Inject constructor(
             delay(500)
             onGetBookByName()
         }
+    }
+
+    private fun setNewUser(user : UserEntity) {
+        _uiState.update { it.copy(
+            user = user
+        ) }
     }
 }

@@ -3,6 +3,7 @@ package com.example.bookmap.data.network
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.bookmap.data.dao.FavoriteDao
 import com.example.bookmap.data.dao.UserDao
 import com.example.bookmap.data.entity.FavoriteBookEntity
 import com.example.bookmap.data.entity.UserEntity
@@ -15,13 +16,13 @@ import com.example.bookmap.data.entity.UserFavoriteBookCrossRef
             FavoriteBookEntity::class,
             UserFavoriteBookCrossRef::class
         ],
-        version = 3
+        version = 4
     )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun favoriteDao(): FavoriteDao
 
     companion object {
-
         @Volatile
         private var INSTANCE: AppDatabase? = null
 

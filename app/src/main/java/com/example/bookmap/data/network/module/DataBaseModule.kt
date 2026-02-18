@@ -2,6 +2,7 @@ package com.example.bookmap.data.network.module
 
 import android.content.Context
 import androidx.room.Room
+import com.example.bookmap.data.dao.FavoriteDao
 import com.example.bookmap.data.dao.UserDao
 import com.example.bookmap.data.network.AppDatabase
 import dagger.Module
@@ -30,4 +31,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideBookDao(database: AppDatabase): UserDao = database.userDao()
+
+    @Provides
+    @Singleton
+    fun provideFavoriteDao(database: AppDatabase): FavoriteDao = database.favoriteDao()
 }

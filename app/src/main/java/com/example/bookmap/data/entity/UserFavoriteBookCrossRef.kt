@@ -28,6 +28,7 @@ data class UserFavoriteBookCrossRef(
 
 data class UserWithFavoriteBooks(
     @Embedded val user: UserEntity,
+
     @Relation(
         parentColumn = "id",
         entityColumn = "id",

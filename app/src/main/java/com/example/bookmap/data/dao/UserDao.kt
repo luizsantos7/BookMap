@@ -26,21 +26,8 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE id = :id")
     suspend fun getUserById(id: Int): UserEntity
 
-    @Query("SELECT EXISTS(SELECT 1 FROM users WHERE email = :email AND password = :password)")
-    suspend fun loginUser(email: String, password: String): Boolean
+    @Query("SELECT * FROM users WHERE email = :email AND password = :password LIMIT 1")
+    suspend fun loginUser(email: String, password: String): UserEntity?
 
 
-    // Favoritos
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFavoriteBook(book: FavoriteBookEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUserFavoriteBook(crossRef: UserFavoriteBookCrossRef)
-
-    @Query("DELETE FROM user_favorite_books WHERE userId = :userId AND bookId = :bookId")
-    suspend fun deleteUserFavoriteBook(userId: Int, bookId: Int)
-
-    @Transaction
-    @Query("SELECT * FROM users WHERE id = :userId")
-    suspend fun getUserWithFavoriteBooks(userId: Int): UserWithFavoriteBooks?
 }

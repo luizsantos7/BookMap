@@ -1,5 +1,6 @@
 package com.example.bookmap.data.repository
 
+import com.example.bookmap.data.dao.FavoriteDao
 import com.example.bookmap.data.dao.UserDao
 import com.example.bookmap.data.entity.BookEntity
 import com.example.bookmap.data.entity.FavoriteBookEntity
@@ -7,10 +8,12 @@ import com.example.bookmap.data.entity.UserEntity
 import com.example.bookmap.data.entity.UserFavoriteBookCrossRef
 import com.example.bookmap.data.entity.UserWithFavoriteBooks
 import com.example.bookmap.data.entity.enum.CountType
+import com.example.bookmap.data.entity.enum.ReadStatus
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val userDao: UserDao
+    private val userDao: UserDao,
+    private val favoriteDao: FavoriteDao
 ) {
     suspend fun createUser(user: UserEntity): Boolean {
         return try {
@@ -18,7 +21,7 @@ class UserRepository @Inject constructor(
             if (emailExists) {
                 false
             } else {
-                user.countType = CountType.USER
+                user.countType = CountType.USER.name
                 userDao.createuser(user)
                 true
             }
@@ -26,38 +29,43 @@ class UserRepository @Inject constructor(
             false
         }
     }
-
-    suspend fun updateUser(userEntity: UserEntity) = userDao.updateUser(userEntity)
-
-    suspend fun getUserById(id: Int) = userDao.getUserById(id)
-    suspend fun loginUser(email: String, password: String) = userDao.loginUser(email, password)
+    suspend fun loginUser(email: String, password: String): UserEntity? {
+        val userFound = userDao.loginUser(email, password)
+        if (userFound != null) {
+            userFound.countType = CountType.USER.name
+            return userFound
+        }
+        return null
+    }
 
     //FAVORITE METODOS
     suspend fun toggleFavoriteBook(userId: Int, book: BookEntity) {
-        val userWithFavorites = userDao.getUserWithFavoriteBooks(userId)
+        val userWithFavorites = favoriteDao.getUserWithFavoriteBooks(userId)
 
-        if (userWithFavorites == null) {
-            return
-        }
+        if (userWithFavorites == null) return
 
         val isFavorite = userWithFavorites.favoriteBooks.any { it.id == book.id }
 
         if (isFavorite) {
-            userDao.deleteUserFavoriteBook(userId, book.id)
+            favoriteDao.deleteUserFavoriteBook(userId, book.id)
         } else {
-            val localBook = FavoriteBookEntity(
+            val favoriteBook = FavoriteBookEntity(
                 id = book.id,
                 title = book.title,
-                coverUrl = book.coverUrl
+                coverUrl = book.coverUrl,
+                isRead = ReadStatus.valueOf(book.isRead.name)
             )
-            userDao.insertFavoriteBook(localBook)
-            userDao.insertUserFavoriteBook(
-                UserFavoriteBookCrossRef(userId, localBook.id)
+
+            favoriteDao.insertFavoriteBook(favoriteBook)
+            favoriteDao.insertUserFavoriteCrossRef(
+                UserFavoriteBookCrossRef(userId = userId, bookId = book.id)
             )
         }
     }
 
-//    suspend fun getUserWithFavoriteBooks(userId: Int): UserWithFavoriteBooks {
-//        return userDao.getUserWithFavoriteBooks(userId)
-//    }
+    suspend fun getUserFavorites(userId: Int): List<FavoriteBookEntity> {
+        val userWithFavorites = favoriteDao.getUserWithFavoriteBooks(userId)
+        return userWithFavorites?.favoriteBooks ?: emptyList()
+    }
+
 }

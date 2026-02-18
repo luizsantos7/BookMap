@@ -31,7 +31,7 @@ class LoginViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState
 
-    private val _navigationEvent = MutableSharedFlow<String>()
+    private val _navigationEvent = MutableSharedFlow<NavigationEvent>()
     val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun onActionEvent(action: LoginScreenAction) {
@@ -50,19 +50,21 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    //Login functions
     fun onSubmitLogin(email: String, password: String) {
         viewModelScope.launch {
             val userFound = userRepository.loginUser(email, password)
-            if (userFound) {
-                _uiState.value = LoginUiState( showError = false)
-                _navigationEvent.emit("home_screen")
+            if (userFound != null) {
+                _uiState.value = LoginUiState(
+                    showError = false,
+                    userRegister = userFound)
+                _navigationEvent.emit(NavigationEvent.ToHomeScreen(userFound))
             } else {
                 _uiState.value = LoginUiState( showError = true)
             }
         }
     }
 
-    // LOGIN FUNCTIONS
     fun enableLoginButton(): Boolean {
         val password = _uiState.value.password
         return password.isNotEmpty() && password.isNotEmpty() && password.length >= 6
@@ -135,7 +137,7 @@ class LoginViewModel @Inject constructor(
 
             _uiState.update {
                 if (success) {
-                    _navigationEvent.emit("home_screen")
+                    _navigationEvent.emit(NavigationEvent.ToHomeScreen(userEntity))
                     it.copy(
                         showRegisterDialog = false,
                         userRegister = userEntity
@@ -203,5 +205,10 @@ class LoginViewModel @Inject constructor(
 
     fun onGenderRegisterChange(gender: String) {
         _uiState.update { it.copy(userRegister = it.userRegister.copy(gender = gender)) }
+    }
+
+    sealed class NavigationEvent {
+        data class ToHomeScreen(val user: UserEntity) : NavigationEvent()
+        object ToLoginScreen : NavigationEvent()
     }
 }

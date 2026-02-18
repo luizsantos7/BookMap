@@ -22,6 +22,6 @@ data class HomeUiState(
         password = EMPTY_STRING,
         birthday = EMPTY_STRING,
         gender = EMPTY_STRING,
-        countType = CountType.USER
+        countType = CountType.GUEST.name
     )
 )
