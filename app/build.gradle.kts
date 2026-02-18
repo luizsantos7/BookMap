@@ -42,6 +42,7 @@ android {
 
 dependencies {
     implementation("com.google.dagger:hilt-android:2.59")
+    implementation(libs.androidx.navigation.testing)
     ksp("com.google.dagger:hilt-compiler:2.59")
 
     implementation("androidx.room:room-runtime:2.8.4")

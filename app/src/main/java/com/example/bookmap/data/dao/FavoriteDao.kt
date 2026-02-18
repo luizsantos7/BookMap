@@ -28,7 +28,7 @@ interface FavoriteDao {
 
     // Obter todos os livros favoritos de um usuário
     @Transaction
-    @Query("SELECT * FROM users WHERE id = :userId")
+    @Query("SELECT * FROM user_favorite_books WHERE userid = :userId")
     suspend fun getUserWithFavoriteBooks(userId: Int): UserWithFavoriteBooks?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -36,5 +36,8 @@ interface FavoriteDao {
 
     @Query("DELETE FROM user_favorite_books WHERE userId = :userId AND bookId = :bookId")
     suspend fun deleteUserFavoriteBook(userId: Int, bookId: Int)
+
+    @Query("SELECT * FROM user_favorite_books")
+    suspend fun getAllCrossRefs(): List<UserFavoriteBookCrossRef>
 
 }

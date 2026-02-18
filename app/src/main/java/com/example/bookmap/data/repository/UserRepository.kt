@@ -1,5 +1,7 @@
 package com.example.bookmap.data.repository
 
+import android.util.Log
+import androidx.room.Query
 import com.example.bookmap.data.dao.FavoriteDao
 import com.example.bookmap.data.dao.UserDao
 import com.example.bookmap.data.entity.BookEntity
@@ -42,9 +44,7 @@ class UserRepository @Inject constructor(
     suspend fun toggleFavoriteBook(userId: Int, book: BookEntity) {
         val userWithFavorites = favoriteDao.getUserWithFavoriteBooks(userId)
 
-        if (userWithFavorites == null) return
-
-        val isFavorite = userWithFavorites.favoriteBooks.any { it.id == book.id }
+        val isFavorite = userWithFavorites?.favoriteBooks?.any { it.id == book.id } == true
 
         if (isFavorite) {
             favoriteDao.deleteUserFavoriteBook(userId, book.id)
@@ -60,6 +60,7 @@ class UserRepository @Inject constructor(
             favoriteDao.insertUserFavoriteCrossRef(
                 UserFavoriteBookCrossRef(userId = userId, bookId = book.id)
             )
+            Log.d("DB_TEST", "Vínculo criado: userId=$userId, bookId=${book.id}")
         }
     }
 
@@ -67,5 +68,4 @@ class UserRepository @Inject constructor(
         val userWithFavorites = favoriteDao.getUserWithFavoriteBooks(userId)
         return userWithFavorites?.favoriteBooks ?: emptyList()
     }
-
 }

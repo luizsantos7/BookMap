@@ -25,6 +25,7 @@ import com.example.bookmap.R
 fun NavBarComponent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    hasSearch: Boolean = true
 ) {
     Row(
         modifier = modifier
@@ -40,16 +41,19 @@ fun NavBarComponent(
             contentDescription = "BookMap Logo",
         )
 
-        Icon(
-            imageVector = Icons.Default.Search,
-            modifier = Modifier
-                .size(32.dp)
-                .clickable(
-                    onClick = onClick,
-                ),
-            contentDescription = "Email Icon",
-            tint = Color.White,
-        )
+
+        if (hasSearch) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                modifier = Modifier
+                    .size(32.dp)
+                    .clickable(
+                        onClick = onClick,
+                    ),
+                contentDescription = "Email Icon",
+                tint = Color.White,
+            )
+        }
     }
 }
 

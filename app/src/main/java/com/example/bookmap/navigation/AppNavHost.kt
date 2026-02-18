@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bookmap.presentation.SharedUserViewModel
+import com.example.bookmap.presentation.favorite.FavoriteScreen
 import com.example.bookmap.presentation.home.HomeScreen
 import com.example.bookmap.presentation.login.LoginScreen
 
@@ -32,6 +33,14 @@ fun AppNavHost(
         }
         composable("home_screen") {
             HomeScreen(
+                modifier = modifier,
+                navController = navController,
+                sharedUserViewModel = sharedUserViewModel
+            )
+        }
+
+        composable("favorite_screen") {
+            FavoriteScreen(
                 modifier = modifier,
                 navController = navController,
                 sharedUserViewModel = sharedUserViewModel
