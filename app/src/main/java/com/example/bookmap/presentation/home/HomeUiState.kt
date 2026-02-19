@@ -13,5 +13,6 @@ data class HomeUiState(
     val showError: Boolean = false,
     val isContinue: Boolean = false,
     val errorMessage: String = "",
-    val user : UserRegister = UserRegister()
+    val user : UserRegister = UserRegister(),
+    val favoritedBooks: List<BookDataModel> = emptyList(),
 )

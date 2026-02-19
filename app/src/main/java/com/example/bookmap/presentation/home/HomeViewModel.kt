@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.repository.BookRepository
-import com.example.bookmap.data.repository.UserRepository
+import com.example.bookmap.data.repository.FavoriteRepository
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
 import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
 import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val bookRepository: BookRepository,
-    val userRepository: UserRepository,
+    val favoriteRepository: FavoriteRepository,
     private val auth: FirebaseAuth
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -46,46 +46,52 @@ class HomeViewModel @Inject constructor(
 
     private fun favoriteBook(book: BookDataModel) {
         auth.currentUser ?: return
-
         viewModelScope.launch {
-//            userRepository.toggleFavoriteBook(user.id, book)
-//
-//            _uiState.update { ui ->
-//                ui.copy(
-//                    filteredBooks = ui.filteredBooks.map {
-//                        if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
-//                    },
-//                    listBook = ui.listBook.map {
-//                        if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
-//                    }
-//                )
-//            }
+            favoriteRepository.toggleFavoriteBook(book)
+            _uiState.update { ui ->
+                ui.copy(
+                    filteredBooks = ui.filteredBooks.map {
+                        if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
+                    },
+                    listBook = ui.listBook.map {
+                        if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
+                    }
+                )
+            }
         }
     }
+
     private fun getBooks() {
         _uiState.update { it.copy(isLoading = true, showError = false, isContinue = false) }
 
         viewModelScope.launch {
+            val favorites = favoriteRepository.getFavoriteBooks()
+            val favoriteIds = favorites.map { it.id }.toSet()
+
+            _uiState.update { it.copy(favoritedBooks = favorites) }
+
             bookRepository.buscarTodosLivros()
                 .onSuccess { books ->
+                    val booksWithFav = books.map { book ->
+                        book.copy(isFavorited = favoriteIds.contains(book.id))
+                    }
+
                     _uiState.update {
                         it.copy(
                             isLoading = false,
+                            listBook = booksWithFav,
+                            filteredBooks = booksWithFav,
                             showError = false,
-                            isContinue = true,
-                            listBook = books,
-                            filteredBooks = books
+                            isContinue = true
                         )
                     }
                 }
                 .onFailure { error ->
-                    error.printStackTrace()
                     _uiState.update {
                         it.copy(
                             isLoading = false,
                             showError = true,
-                            isContinue = false,
-                            errorMessage = error.message ?: "Erro ao carregar livros"
+                            errorMessage = error.message ?: "Erro ao atualizar favoritos"
                         )
                     }
                 }

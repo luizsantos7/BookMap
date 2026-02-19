@@ -43,34 +43,5 @@ class UserRepository @Inject constructor(
             }
     }
 
-    //FAVORITE METODOS
-//    suspend fun toggleFavoriteBook(userId: Int, book: BookEntity) {
-//        val userWithFavorites = favoriteDao.getUserWithFavoriteBooks(userId)
-//
-//        if (userWithFavorites == null) return
-//
-//        val isFavorite = userWithFavorites.favoriteBooks.any { it.id == book.id }
-//
-//        if (isFavorite) {
-//            favoriteDao.deleteUserFavoriteBook(userId, book.id)
-//        } else {
-//            val favoriteBook = FavoriteBookEntity(
-//                id = book.id,
-//                title = book.title,
-//                coverUrl = book.coverUrl,
-//                isRead = ReadStatus.valueOf(book.isRead.name)
-//            )
-//
-//            favoriteDao.insertFavoriteBook(favoriteBook)
-//            favoriteDao.insertUserFavoriteCrossRef(
-//                UserFavoriteBookCrossRef(userId = userId, bookId = book.id)
-//            )
-//        }
-//    }
-//
-//    suspend fun getUserFavorites(userId: Int): List<FavoriteBookEntity> {
-//        val userWithFavorites = favoriteDao.getUserWithFavoriteBooks(userId)
-//        return userWithFavorites?.favoriteBooks ?: emptyList()
-//    }
 
 }

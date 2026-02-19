@@ -134,7 +134,7 @@ class LoginViewModel @Inject constructor(
             }
             return
         }
-        val userDataModel: UserRegisterDataModel = with(_uiState.value.userRegister) {
+        val user : UserRegisterDataModel = with(_uiState.value.userRegister) {
             UserRegisterDataModel(
                 email = email,
                 confirmEmail = confirmEmail,
@@ -147,7 +147,7 @@ class LoginViewModel @Inject constructor(
             )
         }
         userRepository.createUser(
-            userDataModel,
+            user,
             onSuccess = {
                 viewModelScope.launch {
                     _uiState.update {

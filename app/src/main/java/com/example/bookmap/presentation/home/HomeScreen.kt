@@ -54,7 +54,7 @@ fun HomeScreen(
         },
         navController = navController,
         modifier = modifier,
-        onFavorited = {},//{ book -> viewModel.onActionEvent(OnFavorited(book)) },
+        onFavorited = { book -> viewModel.onActionEvent(OnFavorited(book)) },
         onRetry = { viewModel.onActionEvent(OnRetry) },
     )
 }
