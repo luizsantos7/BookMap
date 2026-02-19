@@ -20,8 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,8 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.bookmap.data.entity.BookEntity
-import com.example.bookmap.presentation.SharedUserViewModel
+import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.presentation.home.HomeScreenAction.*
 import com.example.bookmap.utils.card.BookCard
 import com.example.bookmap.utils.components.ErrorContent
@@ -45,17 +42,9 @@ import com.example.bookmap.utils.ui.theme.focusFieldBorder
 fun HomeScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel(),
-    sharedUserViewModel: SharedUserViewModel,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val currentUser by sharedUserViewModel.currentUser.collectAsState()
-
-    LaunchedEffect(currentUser) {
-        currentUser?.let { user ->
-            viewModel.onActionEvent(SetUser(user))
-        }
-    }
 
     HomeScreenContent(
         uiState = uiState,
@@ -65,7 +54,7 @@ fun HomeScreen(
         },
         navController = navController,
         modifier = modifier,
-        onFavorited = { book -> viewModel.onActionEvent(OnFavorited(book)) },
+        onFavorited = {},//{ book -> viewModel.onActionEvent(OnFavorited(book)) },
         onRetry = { viewModel.onActionEvent(OnRetry) },
     )
 }
@@ -78,7 +67,7 @@ private fun HomeScreenContent(
     onRetry: () -> Unit,
     onSearchBook: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onFavorited: (BookEntity) -> Unit,
+    onFavorited: (BookDataModel) -> Unit,
 ) {
     Column(
         modifier = modifier

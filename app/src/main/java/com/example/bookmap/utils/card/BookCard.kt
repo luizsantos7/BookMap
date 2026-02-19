@@ -34,13 +34,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.bookmap.data.entity.AuthorEntity
+import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.utils.constants.EMPTY_STRING
 
 @Composable
 fun BookCard(
     title: String = "Book Title",
-    author: List<AuthorEntity> = listOf(),
+    author: List<AuthorDataModel> = listOf(),
     imageCover: String? = EMPTY_STRING,
     modifier: Modifier = Modifier,
     onFavorited: () -> Unit,

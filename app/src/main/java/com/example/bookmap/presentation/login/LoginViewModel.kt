@@ -2,7 +2,8 @@ package com.example.bookmap.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bookmap.data.entity.UserEntity
+import com.example.bookmap.data.models.Profile
+import com.example.bookmap.data.models.UserRegisterDataModel
 import com.example.bookmap.data.repository.UserRepository
 import com.example.bookmap.presentation.login.LoginScreenAction.EmailChanged
 import com.example.bookmap.presentation.login.LoginScreenAction.PasswordChanged
@@ -46,23 +47,24 @@ class LoginViewModel @Inject constructor(
             is RegisterPasswordChanged -> onPasswordRegisterChange(action.password)
             is RegisterBirthdayChanged -> onBirthdayRegisterChange(action.birthday)
             is RegisterGenderChanged -> onGenderRegisterChange(action.gender)
-            is SubmitRegister -> onSubmitRegister(action.userEntity)
+            is SubmitRegister -> onSubmitRegister()
         }
     }
 
     //Login functions
     fun onSubmitLogin(email: String, password: String) {
-        viewModelScope.launch {
-            val userFound = userRepository.loginUser(email, password)
-            if (userFound != null) {
-                _uiState.value = LoginUiState(
-                    showError = false,
-                    userRegister = userFound)
-                _navigationEvent.emit(NavigationEvent.ToHomeScreen(userFound))
-            } else {
-                _uiState.value = LoginUiState( showError = true)
+        userRepository.loginUser(
+            email,
+            password,
+            onSuccess = {
+                viewModelScope.launch {
+                    _navigationEvent.emit(NavigationEvent.ToHomeScreen)
+                }
+            },
+            onFailure = {
+                _uiState.value = LoginUiState(showError = true)
             }
-        }
+        )
     }
 
     fun enableLoginButton(): Boolean {
@@ -120,37 +122,49 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onSubmitRegister(userEntity: UserEntity) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(showError = false) }
+    fun onSubmitRegister() {
+        _uiState.update { it.copy(showError = false) }
 
-            if (!validateEmails(userEntity.email, userEntity.confirmEmail)) {
-                _uiState.update {
-                    it.copy(
-                        showError = true,
-                        errorMessage = "Os e-mails não coincidem"
-                    )
-                }
-                return@launch
-            }
-            val success = userRepository.createUser(userEntity)
-
+        if (!validateEmails(_uiState.value.userRegister.email, _uiState.value.userRegister.confirmEmail)) {
             _uiState.update {
-                if (success) {
-                    _navigationEvent.emit(NavigationEvent.ToHomeScreen(userEntity))
-                    it.copy(
-                        showRegisterDialog = false,
-                        userRegister = userEntity
-                    )
-
-                } else {
+                it.copy(
+                    showError = true,
+                    errorMessage = "Os e-mails não coincidem"
+                )
+            }
+            return
+        }
+        val userDataModel: UserRegisterDataModel = with(_uiState.value.userRegister) {
+            UserRegisterDataModel(
+                email = email,
+                confirmEmail = confirmEmail,
+                password = password,
+                profile = Profile(
+                    name = name,
+                    birthday = birthday,
+                    gender = gender
+                )
+            )
+        }
+        userRepository.createUser(
+            userDataModel,
+            onSuccess = {
+                viewModelScope.launch {
+                    _uiState.update {
+                        it.copy(showRegisterDialog = false)
+                    }
+                    _navigationEvent.emit(NavigationEvent.ToHomeScreen)
+                }
+            },
+            onFailure = {
+                _uiState.update {
                     it.copy(
                         showError = true,
                         errorMessage = "Email já cadastrado!"
                     )
                 }
             }
-        }
+        )
     }
 
     fun registerButtonEnabled(): Boolean {
@@ -208,7 +222,7 @@ class LoginViewModel @Inject constructor(
     }
 
     sealed class NavigationEvent {
-        data class ToHomeScreen(val user: UserEntity) : NavigationEvent()
+        data object ToHomeScreen : NavigationEvent()
         object ToLoginScreen : NavigationEvent()
     }
 }

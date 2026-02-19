@@ -1,25 +1,30 @@
 package com.example.bookmap.data.mapper
 
+import com.example.bookmap.data.dto.response.AuthorResponse
 import com.example.bookmap.data.dto.response.BookResponse
-import com.example.bookmap.data.entity.AuthorEntity
-import com.example.bookmap.data.entity.BookEntity
-import com.example.bookmap.data.entity.enum.ReadStatus
+import com.example.bookmap.data.models.AuthorDataModel
+import com.example.bookmap.data.models.BookDataModel
+import javax.inject.Inject
 
+class BookMapper @Inject constructor() {
 
-fun BookResponse.toEntity(): BookEntity {
-    return BookEntity(
-        id = id.toInt(),
-        title = title,
-        authors = authors.map {
-            AuthorEntity(
-                name = it.name,
-                birthYear = it.birthYear?.toInt(),
-                deathYear = it.deathYear?.toInt()
-            )
-        },
-        summaries = summaries,
-        languages = languages,
-        coverUrl = formats.imageJpeg,
-        isRead = ReadStatus.UNREAD
-    )
+    fun mapResponseToDataModel(response: BookResponse, favoriteBooks: List<BookDataModel>): BookDataModel {
+        return BookDataModel(
+            id = response.id,
+            title = response.title,
+            authors = response.authors.map { mapAuthor(it) },
+            summaries = response.summaries,
+            languages = response.languages,
+            coverUrl = response.formats.imageJpeg,
+            isFavorited = favoriteBooks.any { it.id == response.id }
+        )
+    }
+
+    private fun mapAuthor(author: AuthorResponse): AuthorDataModel {
+        return AuthorDataModel(
+            name = author.name,
+            birthYear = author.birthYear,
+            deathYear = author.deathYear
+        )
+    }
 }

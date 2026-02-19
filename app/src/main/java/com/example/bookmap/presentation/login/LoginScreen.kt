@@ -36,7 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.bookmap.presentation.login.LoginViewModel.NavigationEvent.ToHomeScreen
 import com.example.bookmap.presentation.login.logindialog.CustomLoginDialog
-import com.example.bookmap.presentation.SharedUserViewModel
 import com.example.bookmap.presentation.login.LoginViewModel.NavigationEvent.ToLoginScreen
 import com.example.bookmap.utils.ui.theme.UnfocusField
 import com.example.bookmap.utils.ui.theme.focusFieldBorder
@@ -49,8 +48,7 @@ import kotlinx.coroutines.delay
 fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
-    navController: NavController,
-    sharedUserViewModel: SharedUserViewModel,
+    navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var visible by remember { mutableStateOf(false) }
@@ -70,8 +68,6 @@ fun LoginScreen(
         viewModel.navigationEvent.collect { event ->
             when (event) {
                 is ToHomeScreen -> {
-                    sharedUserViewModel.setUser(event.user)
-
                     navController.navigate("home_screen") {
                         popUpTo("login_screen") { inclusive = true }
                     }
@@ -175,7 +171,7 @@ fun LoginScreen(
             if (uiState.showRegisterDialog) {
                 CustomLoginDialog(
                     onDismissAction = {viewModel.dismissRegisterDialog()},
-                    onContinueAction = { viewModel.onSubmitRegister(viewModel.uiState.value.userRegister) },
+                    onContinueAction = {viewModel.onActionEvent(LoginScreenAction.SubmitRegister) },
                     viewModel = viewModel
                 )
             }

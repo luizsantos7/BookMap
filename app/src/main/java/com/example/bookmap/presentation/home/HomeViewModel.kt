@@ -2,9 +2,7 @@ package com.example.bookmap.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bookmap.data.entity.BookEntity
-import com.example.bookmap.data.entity.UserEntity
-import com.example.bookmap.data.entity.enum.CountType
+import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.data.repository.UserRepository
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
@@ -12,7 +10,7 @@ import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
 import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
 import com.example.bookmap.presentation.home.HomeScreenAction.OnRetry
 import com.example.bookmap.presentation.home.HomeScreenAction.OnSearchABook
-import com.example.bookmap.presentation.home.HomeScreenAction.SetUser
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -24,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val bookRepository: BookRepository,
-    val userRepository: UserRepository
+    val userRepository: UserRepository,
+    private val auth: FirebaseAuth
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState
@@ -41,28 +40,26 @@ class HomeViewModel @Inject constructor(
             is OnSearchABook -> onSearchBook(bookName = action.bookName)
             is GetBookBySearch -> onGetBookByName()
             is OnFavorited -> favoriteBook(action.book)
-            is SetUser -> setNewUser(action.user)
             OnRetry -> getBooks()
         }
     }
 
-    private fun favoriteBook(book: BookEntity) {
-        val user = _uiState.value.user
-        if (user.countType == CountType.USER.name) {
-            viewModelScope.launch {
-                userRepository.toggleFavoriteBook(user.id, book)
+    private fun favoriteBook(book: BookDataModel) {
+        auth.currentUser ?: return
 
-                _uiState.update { ui ->
-                    ui.copy(
-                        filteredBooks = ui.filteredBooks.map {
-                            if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
-                        },
-                        listBook = ui.listBook.map {
-                            if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
-                        }
-                    )
-                }
-            }
+        viewModelScope.launch {
+//            userRepository.toggleFavoriteBook(user.id, book)
+//
+//            _uiState.update { ui ->
+//                ui.copy(
+//                    filteredBooks = ui.filteredBooks.map {
+//                        if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
+//                    },
+//                    listBook = ui.listBook.map {
+//                        if (it.id == book.id) it.copy(isFavorited = !it.isFavorited) else it
+//                    }
+//                )
+//            }
         }
     }
     private fun getBooks() {
@@ -148,11 +145,5 @@ class HomeViewModel @Inject constructor(
             delay(500)
             onGetBookByName()
         }
-    }
-
-    private fun setNewUser(user : UserEntity) {
-        _uiState.update { it.copy(
-            user = user
-        ) }
     }
 }
