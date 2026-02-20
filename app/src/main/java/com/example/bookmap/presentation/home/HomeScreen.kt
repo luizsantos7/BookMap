@@ -74,7 +74,9 @@ private fun HomeScreenContent(
             .fillMaxSize()
             .background(Color(0xFF171D23))
     ) {
-        NavBarComponent(onClick = onSearchClick)
+        NavBarComponent(onClick = onSearchClick,
+            visibleSearch = true
+        )
 
         AnimatedVisibility(
             visible = uiState.searchBook,

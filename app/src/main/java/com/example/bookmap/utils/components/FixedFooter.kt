@@ -67,7 +67,7 @@ fun Footer(
                 tint = Color.White,
                 modifier = Modifier
                     .size(22.dp)
-                    .clickable(onClick = { navController.navigate("") })
+                    .clickable(onClick = { navController.navigate("favorite_screen") })
             )
             Text(
                 text = "Favoritados",

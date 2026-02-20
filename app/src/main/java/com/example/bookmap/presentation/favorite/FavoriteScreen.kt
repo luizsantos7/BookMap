@@ -15,42 +15,45 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDataModel
-import com.example.bookmap.presentation.home.HomeViewModel
+import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.utils.card.BookCard
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
 
-/**
- * Tela de Favoritos — reutiliza o mesmo ViewModel para acessar os livros favoritados
- * já carregados no uiState (favoritedBooks).
- */
+
 @Composable
-fun FavoritesScreen(
+fun FavoriteScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: FavoriteViewModel = hiltViewModel(), // pode ser o mesmo da Home se o estado for compartilhado
+    viewModel: FavoriteViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     FavoritesScreenContent(
         uiState = uiState,
         navController = navController,
-        onFavorited = { book -> viewModel.onActionEvent(com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited(book)) },
+        onFavorited = { book -> viewModel.onActionEvent(FavoriteScreenAction.OnRemoveFromFavorite(book)) },
         modifier = modifier
     )
 }
 
 @Composable
 private fun FavoritesScreenContent(
-    uiState: com.example.bookmap.presentation.home.HomeUiState,
+    uiState: FavoriteUiState,
     navController: NavController,
     modifier: Modifier = Modifier,
     onFavorited: (BookDataModel) -> Unit
@@ -60,8 +63,7 @@ private fun FavoritesScreenContent(
             .fillMaxSize()
             .background(Color(0xFF171D23))
     ) {
-        // Cabeçalho simples
-        NavBarComponent(onClick = { /* opcional: botão de voltar, etc */ })
+        NavBarComponent(onClick = {  })
 
         when {
             uiState.isLoading -> {
@@ -82,8 +84,7 @@ private fun FavoritesScreenContent(
                 }
             }
 
-            uiState.favoritedBooks.isEmpty() -> {
-                // Estado vazio: nenhum livro favoritado ainda
+            uiState.listBook.isEmpty() -> {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
@@ -112,18 +113,17 @@ private fun FavoritesScreenContent(
             }
 
             else -> {
-                // Lista de livros favoritos
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)
                 ) {
-                    items(uiState.favoritedBooks) { book ->
+                    items(uiState.listBook) { book ->
                         BookCard(
                             title = book.title,
                             author = book.authors,
                             imageCover = book.coverUrl,
-                            onFavorited = { onFavorited(book) }, // permite remover dos favoritos
+                            onFavorited = { onFavorited(book) },
                             isFavorited = book.isFavorited
                         )
                     }
@@ -135,4 +135,24 @@ private fun FavoritesScreenContent(
             Footer(navController = navController)
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoriteScreenEmptyPreview() {
+    FavoritesScreenContent(
+        uiState = FavoriteUiState(listBook = emptyList(), isLoading = false),
+        navController = NavController(LocalContext.current),
+        onFavorited = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoriteScreenLoadingPreview() {
+    FavoritesScreenContent(
+        uiState = FavoriteUiState(listBook = emptyList(), isLoading = true),
+        navController = NavController(LocalContext.current),
+        onFavorited = {}
+    )
 }

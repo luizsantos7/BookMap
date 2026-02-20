@@ -15,6 +15,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,8 +69,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val favorites = favoriteRepository.getFavoriteBooks()
             val favoriteIds = favorites.map { it.id }.toSet()
-
-            _uiState.update { it.copy(favoritedBooks = favorites) }
 
             bookRepository.buscarTodosLivros()
                 .onSuccess { books ->

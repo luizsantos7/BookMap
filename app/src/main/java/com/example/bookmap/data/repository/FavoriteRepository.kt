@@ -41,14 +41,14 @@ class FavoriteRepository @Inject constructor(
             }
     }
 
-    private fun addFavorite(book: BookDataModel) {
+     fun addFavorite(book: BookDataModel) {
         favoritesCollection
             .document(book.id.toString())
             .set(book)
         book.isFavorited = true
     }
 
-    private fun removeFavorite(book: BookDataModel) {
+     fun removeFavorite(book: BookDataModel) {
         favoritesCollection.document(book.id.toString()).delete()
         book.isFavorited = false
     }
