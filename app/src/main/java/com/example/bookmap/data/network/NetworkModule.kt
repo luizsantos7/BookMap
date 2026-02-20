@@ -1,4 +1,4 @@
-package com.example.bookmap.data.network.module
+package com.example.bookmap.data.network
 
 import com.example.bookmap.data.api.BookApi
 import dagger.Module
@@ -11,7 +11,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager

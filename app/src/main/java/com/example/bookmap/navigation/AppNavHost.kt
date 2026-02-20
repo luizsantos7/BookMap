@@ -7,13 +7,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bookmap.presentation.details.DetailScreen
+import com.example.bookmap.presentation.favorite.FavoriteScreen
 import com.example.bookmap.presentation.home.HomeScreen
 import com.example.bookmap.presentation.login.LoginScreen
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
@@ -29,6 +31,20 @@ fun AppNavHost(
             HomeScreen(
                 modifier = modifier,
                 navController = navController
+            )
+        }
+        composable("favorite_screen") {
+            FavoriteScreen(
+                modifier = modifier,
+                navController = navController
+            )
+        }
+
+        composable("details/{bookId}") { backStackEntry ->
+            val bookId = backStackEntry.arguments?.getString("bookId")
+            DetailScreen(
+                navController = navController,
+                bookId = bookId
             )
         }
     }

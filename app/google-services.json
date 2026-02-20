@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "977957143730",
+    "project_id": "bookmap-f0674",
+    "storage_bucket": "bookmap-f0674.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977957143730:android:db0b9fc44332dc96b335ab",
+        "android_client_info": {
+          "package_name": "com.example.bookmap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKmJN-bLz2VJFiZzntxYHqT9TO6-wrmPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

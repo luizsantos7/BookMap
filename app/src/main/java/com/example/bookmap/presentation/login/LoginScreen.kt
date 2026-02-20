@@ -34,7 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.bookmap.presentation.login.LoginViewModel.NavigationEvent.ToHomeScreen
 import com.example.bookmap.presentation.login.logindialog.CustomLoginDialog
+import com.example.bookmap.presentation.login.LoginViewModel.NavigationEvent.ToLoginScreen
 import com.example.bookmap.utils.ui.theme.UnfocusField
 import com.example.bookmap.utils.ui.theme.focusFieldBorder
 import com.example.bookmap.utils.components.FixedButton
@@ -63,9 +65,16 @@ fun LoginScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.navigationEvent.collect { route ->
-            navController.navigate(route) {
-                popUpTo("login") { inclusive = true }
+        viewModel.navigationEvent.collect { event ->
+            when (event) {
+                is ToHomeScreen -> {
+                    navController.navigate("home_screen") {
+                        popUpTo("login_screen") { inclusive = true }
+                    }
+                }
+                is ToLoginScreen -> {
+                    navController.navigate("login_screen")
+                }
             }
         }
     }
@@ -162,7 +171,7 @@ fun LoginScreen(
             if (uiState.showRegisterDialog) {
                 CustomLoginDialog(
                     onDismissAction = {viewModel.dismissRegisterDialog()},
-                    onContinueAction = { viewModel.onSubmitRegister(viewModel.uiState.value.userRegister) },
+                    onContinueAction = {viewModel.onActionEvent(LoginScreenAction.SubmitRegister) },
                     viewModel = viewModel
                 )
             }

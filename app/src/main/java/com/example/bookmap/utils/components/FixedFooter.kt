@@ -1,6 +1,7 @@
 package com.example.bookmap.utils.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,11 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
 fun Footer(
     modifier: Modifier = Modifier,
-    onClick : () -> Unit = {}
+    navController: NavController
 ) {
 
     Row(
@@ -48,6 +50,7 @@ fun Footer(
                 contentDescription = "Home icon",
                 tint = Color.White,
                 modifier = Modifier.size(22.dp)
+                    .clickable(onClick = { navController.navigate("home_screen") })
             )
             Text(
                 text = "Inicio ",
@@ -60,9 +63,11 @@ fun Footer(
         ) {
             Icon(
                 imageVector = Icons.Default.Bookmark,
-                contentDescription = "Home icon",
+                contentDescription = "Salvar icon",
                 tint = Color.White,
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier
+                    .size(22.dp)
+                    .clickable(onClick = { navController.navigate("favorite_screen") })
             )
             Text(
                 text = "Favoritados",
@@ -75,9 +80,11 @@ fun Footer(
         ) {
             Icon(
                 imageVector = Icons.Default.Person,
-                contentDescription = "Home icon",
+                contentDescription = "Perfil icon",
                 tint = Color.White,
-                modifier = Modifier.size(22.dp)
+                modifier = Modifier
+                    .size(22.dp)
+                    .clickable(onClick = { navController.navigate("profile_screen") })
             )
             Text(
                 text = "Perfil",
@@ -91,5 +98,4 @@ fun Footer(
 @Preview
 @Composable
 private fun FooterPreview() {
-    Footer()
 }

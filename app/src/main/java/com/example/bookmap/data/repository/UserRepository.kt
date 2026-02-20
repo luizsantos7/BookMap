@@ -1,39 +1,47 @@
 package com.example.bookmap.data.repository
 
-import android.util.Log
-import com.example.bookmap.data.dao.UserDao
-import com.example.bookmap.data.entity.UserEntity
-import com.example.bookmap.data.entity.enum.CountType
+import com.example.bookmap.data.models.UserRegisterDataModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val userDao: UserDao
+    private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
 ) {
-    suspend fun createUser(user: UserEntity): Boolean {
-        return try {
-            val emailExists = userDao.emailExists(user.email)
+    fun createUser(user: UserRegisterDataModel, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        auth.createUserWithEmailAndPassword(user.email, user.password)
+            .addOnSuccessListener {
+                val uid = auth.currentUser?.uid ?: run {
+                    onFailure()
+                    return@addOnSuccessListener
+                }
 
-            if (emailExists) {
-                return false
-            } else {
-                user.countType = CountType.USER
-                userDao.createuser(user)
-                true
+                firestore.collection("users")
+                    .document(uid)
+                    .collection("profile")
+                    .add(user.profile)
+                    .addOnSuccessListener {
+                        onSuccess()
+                    }
+                    .addOnFailureListener {
+                        onFailure()
+                    }
             }
-        } catch (e: Exception) {
-            false
-        }
+            .addOnFailureListener {
+                onFailure()
+            }
     }
 
-    suspend fun updateUser(userEntity: UserEntity) {
-        userDao.updateUser(userEntity)
+    fun loginUser(email: String, password: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener {
+                onFailure()
+            }
     }
 
-    suspend fun getUserById(id: Int): UserEntity {
-        return userDao.getUserById(id)
-    }
 
-    suspend fun loginUser(email: String, password: String): Boolean {
-        return userDao.loginUser(email, password)
-    }
 }

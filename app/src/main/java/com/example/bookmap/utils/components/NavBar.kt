@@ -25,6 +25,7 @@ import com.example.bookmap.R
 fun NavBarComponent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    visibleSearch: Boolean = false
 ) {
     Row(
         modifier = modifier
@@ -39,17 +40,18 @@ fun NavBarComponent(
             painter = painterResource(id = R.drawable.logo_para_login),
             contentDescription = "BookMap Logo",
         )
-
-        Icon(
-            imageVector = Icons.Default.Search,
-            modifier = Modifier
-                .size(32.dp)
-                .clickable(
-                    onClick = onClick,
-                ),
-            contentDescription = "Email Icon",
-            tint = Color.White,
-        )
+        if (visibleSearch) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                modifier = Modifier
+                    .size(32.dp)
+                    .clickable(
+                        onClick = onClick,
+                    ),
+                contentDescription = "Email Icon",
+                tint = Color.White,
+            )
+        }
     }
 }
 

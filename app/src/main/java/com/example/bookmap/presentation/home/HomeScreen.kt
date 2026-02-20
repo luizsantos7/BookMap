@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.bookmap.data.entity.BookEntity
+import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.presentation.home.HomeScreenAction.*
 import com.example.bookmap.utils.card.BookCard
 import com.example.bookmap.utils.components.ErrorContent
@@ -52,8 +52,9 @@ fun HomeScreen(
         onSearchBook = { bookName ->
             viewModel.onActionEvent(OnSearchABook(bookName))
         },
+        navController = navController,
         modifier = modifier,
-        onFavorited ={book -> viewModel.onActionEvent(HomeScreenAction.OnFavorited(book))},
+        onFavorited = { book -> viewModel.onActionEvent(OnFavorited(book)) },
         onRetry = { viewModel.onActionEvent(OnRetry) },
     )
 }
@@ -61,18 +62,21 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenContent(
     uiState: HomeUiState,
+    navController: NavController,
     onSearchClick: () -> Unit,
     onRetry: () -> Unit,
     onSearchBook: (String) -> Unit,
     modifier: Modifier = Modifier,
-    onFavorited: (BookEntity) -> Unit,
+    onFavorited: (BookDataModel) -> Unit,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF171D23))
     ) {
-        NavBarComponent(onClick = onSearchClick)
+        NavBarComponent(onClick = onSearchClick,
+            visibleSearch = true
+        )
 
         AnimatedVisibility(
             visible = uiState.searchBook,
@@ -171,7 +175,9 @@ private fun HomeScreenContent(
                             title = item.title,
                             author = item.authors,
                             imageCover = item.coverUrl,
-                            onFavorited = {onFavorited(item)}
+                            onFavorited = { onFavorited(item) },
+                            isFavorited = item.isFavorited,
+                            onDetails = {navController.navigate("details/${item.id}")}
                         )
                     }
                 }
@@ -180,7 +186,7 @@ private fun HomeScreenContent(
         Column(
             verticalArrangement = Arrangement.Bottom
         ) {
-            Footer(onClick = {})
+            Footer(navController = navController)
         }
     }
 }

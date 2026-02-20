@@ -1,6 +1,6 @@
 package com.example.bookmap.presentation.home
 
-import com.example.bookmap.data.entity.BookEntity
+import com.example.bookmap.data.models.BookDataModel
 
 sealed interface HomeScreenAction {
 
@@ -9,5 +9,5 @@ sealed interface HomeScreenAction {
 
     data class GetBookBySearch(val bookName: String) : HomeScreenAction
     data object OnRetry : HomeScreenAction
-    data class OnFavorited(val book : BookEntity) : HomeScreenAction
+    data class OnFavorited(val book : BookDataModel) : HomeScreenAction
 }

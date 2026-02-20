@@ -1,6 +1,6 @@
 package com.example.bookmap.presentation.login
 
-import com.example.bookmap.data.entity.UserEntity
+import com.example.bookmap.presentation.login.models.UserRegister
 import com.example.bookmap.utils.constants.EMPTY_STRING
 
 data class LoginUiState(
@@ -9,12 +9,5 @@ data class LoginUiState(
     val showRegisterDialog: Boolean = false,
     val showError: Boolean = false,
     val errorMessage: String = EMPTY_STRING,
-    val userRegister : UserEntity = UserEntity(
-        name = EMPTY_STRING,
-        email = EMPTY_STRING,
-        confirmEmail = EMPTY_STRING,
-        password = EMPTY_STRING,
-        birthday = EMPTY_STRING,
-        gender = EMPTY_STRING
-    )
+    val userRegister: UserRegister = UserRegister()
 )
