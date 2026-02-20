@@ -66,7 +66,7 @@ fun DetailsDescription(
                 Text(
                     text = summary,
                     style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
-                    textAlign = TextAlign.Justify
+                    textAlign = TextAlign.Start
                 )
             }
         }
