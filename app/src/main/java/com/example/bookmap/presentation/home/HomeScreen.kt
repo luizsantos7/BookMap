@@ -176,7 +176,8 @@ private fun HomeScreenContent(
                             author = item.authors,
                             imageCover = item.coverUrl,
                             onFavorited = { onFavorited(item) },
-                            isFavorited = item.isFavorited
+                            isFavorited = item.isFavorited,
+                            onDetails = {navController.navigate("details/${item}")}
                         )
                     }
                 }

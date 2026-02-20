@@ -38,5 +38,13 @@ fun AppNavHost(
                 navController = navController
             )
         }
+
+        composable("details/{book}") { backStackEntry ->
+            val bookId = backStackEntry
+            DetailsScreen(
+                navController = navController,
+                bookId = bookId
+            )
+        }
     }
 }

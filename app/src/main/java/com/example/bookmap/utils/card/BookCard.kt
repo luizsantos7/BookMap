@@ -44,14 +44,15 @@ fun BookCard(
     imageCover: String? = EMPTY_STRING,
     modifier: Modifier = Modifier,
     onFavorited: () -> Unit,
-    isFavorited: Boolean = false
+    isFavorited: Boolean = false,
+    onDetails: () -> Unit = { },
 ) {
-
     Card(
         modifier = modifier
             .fillMaxWidth()
             .height(175.dp)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .clickable(onClick = onDetails),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF15191E)),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

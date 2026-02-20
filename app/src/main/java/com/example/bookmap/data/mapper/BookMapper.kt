@@ -4,6 +4,7 @@ import com.example.bookmap.data.dto.response.AuthorResponse
 import com.example.bookmap.data.dto.response.BookResponse
 import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDataModel
+import com.example.bookmap.data.models.BookDetailsDataModel
 import javax.inject.Inject
 
 class BookMapper @Inject constructor() {
@@ -25,6 +26,18 @@ class BookMapper @Inject constructor() {
             name = author.name,
             birthYear = author.birthYear,
             deathYear = author.deathYear
+        )
+    }
+
+    private fun mapDataModelToBookDetails(dataModel: BookDataModel): BookDetailsDataModel {
+        return BookDetailsDataModel(
+            id = dataModel.id,
+            title = dataModel.title,
+            authors = dataModel.authors,
+            summaries = dataModel.summaries,
+            languages = dataModel.languages,
+            coverUrl = dataModel.coverUrl,
+            isRead = dataModel.isRead,
         )
     }
 }
