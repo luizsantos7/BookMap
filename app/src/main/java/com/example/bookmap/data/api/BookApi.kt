@@ -18,4 +18,6 @@ interface BookApi {
         @Query("search") name: String
     ): RootResponse
 
+    @GET("books/{id}")
+    suspend fun pegarLivroPorId(@Path("id") id: String?): BookResponse
 }

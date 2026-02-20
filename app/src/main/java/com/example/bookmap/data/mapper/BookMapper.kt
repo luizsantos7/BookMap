@@ -29,7 +29,7 @@ class BookMapper @Inject constructor() {
         )
     }
 
-    private fun mapDataModelToBookDetails(dataModel: BookDataModel): BookDetailsDataModel {
+    fun mapDataModelToBookDetails(dataModel: BookDataModel): BookDetailsDataModel {
         return BookDetailsDataModel(
             id = dataModel.id,
             title = dataModel.title,

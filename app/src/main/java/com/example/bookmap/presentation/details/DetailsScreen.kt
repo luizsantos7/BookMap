@@ -35,11 +35,14 @@ import com.example.bookmap.utils.components.NavBarComponent
 
 @Composable
 fun DetailScreen(
+    bookId: String?,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: DetailViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    viewModel.onActionEvent(DetailScreenAction.LoadBookDetails(bookId))
 
     DetailScreenContent(
         uiState = uiState,
@@ -54,6 +57,7 @@ private fun DetailScreenContent(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
+
     val book = uiState.book
 
     Column(
@@ -113,11 +117,3 @@ private fun DetailScreenContent(
     }
 }
 
-@Composable
-@androidx.compose.ui.tooling.preview.Preview(showBackground = true)
-fun DetailScreenPreview() {
-    DetailScreenContent(
-        uiState = DetailUiState(),
-        navController = rememberNavController(),
-    )
-}

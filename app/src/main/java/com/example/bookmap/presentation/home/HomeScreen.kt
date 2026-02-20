@@ -177,7 +177,7 @@ private fun HomeScreenContent(
                             imageCover = item.coverUrl,
                             onFavorited = { onFavorited(item) },
                             isFavorited = item.isFavorited,
-                            onDetails = {navController.navigate("details/${item}")}
+                            onDetails = {navController.navigate("details/${item.id}")}
                         )
                     }
                 }

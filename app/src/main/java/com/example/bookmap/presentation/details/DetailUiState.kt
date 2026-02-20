@@ -5,6 +5,11 @@ import com.example.bookmap.data.models.BookDetailsDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 
 data class DetailUiState (
+
+    val isLoading: Boolean = false,
+    val isContinue: Boolean = false,
+    val showError: Boolean = false,
+    val errorMessage: String = "",
     val book : BookDetailsDataModel = BookDetailsDataModel(
         id = 1L,
         title = "O Senhor dos Anéis:A Sociedade do Anel",

@@ -3,6 +3,7 @@ package com.example.bookmap.data.repository
 import com.example.bookmap.data.api.BookApi
 import com.example.bookmap.data.mapper.BookMapper
 import com.example.bookmap.data.models.BookDataModel
+import com.example.bookmap.data.models.BookDetailsDataModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -36,6 +37,17 @@ class BookRepository @Inject constructor(
         bookApi.listarLivrosPorNome(name).results.map {
             bookMapper.mapResponseToDataModel(it, favoriteBooks)
         }
+    }
+
+    suspend fun buscarLivroPorId(id: String?): Result<BookDetailsDataModel> = runCatching {
+        val bookResponse = bookApi.pegarLivroPorId(id)
+
+        val bookDataModel = bookMapper.mapResponseToDataModel(
+            response = bookResponse,
+            favoriteBooks = favoriteBooks
+        )
+
+        bookMapper.mapDataModelToBookDetails(bookDataModel)
     }
 
     suspend fun buscarTodosLivros(): Result<List<BookDataModel>> = runCatching {
