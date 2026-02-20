@@ -1,7 +1,6 @@
 package com.example.bookmap.presentation.details
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,7 +30,6 @@ import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDetailsDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.utils.components.DetailsDescription
-import com.example.bookmap.utils.components.FixedButton
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
 
@@ -106,21 +103,9 @@ private fun DetailScreenContent(
 
             item {
                 DetailsDescription(
-                    book = book
+                    book = book,
+                    navController = navController,
                 )
-            }
-
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 90.dp)
-                        .padding(bottom = 10.dp)
-                ) {
-                    FixedButton(
-                        primaryClickButton = {navController.navigate("home_screen")}
-                    )
-                }
             }
 
         }

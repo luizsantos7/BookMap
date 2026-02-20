@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDetailsDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
@@ -24,7 +26,8 @@ import com.example.bookmap.data.models.ReadStatusDataModel
 fun DetailsDescription(
     book: BookDetailsDataModel,
     modifier: Modifier = Modifier,
-    onStatusChange : () -> Unit = { }
+    onStatusChange : () -> Unit = { },
+    navController: NavController
 ) {
     Column(
         modifier = modifier
@@ -79,6 +82,11 @@ fun DetailsDescription(
                 .padding(horizontal = 72.dp, vertical = 16.dp)
         )
 
+        Button(onClick = {navController.navigate("home_screen")}) {
+            Text(text = "Voltar")
+        }
+
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -114,5 +122,4 @@ private fun DetailsDescriptionPreview() {
         isRead = ReadStatusDataModel.UNREAD,
     )
 
-    DetailsDescription(book = mockBook)
 }

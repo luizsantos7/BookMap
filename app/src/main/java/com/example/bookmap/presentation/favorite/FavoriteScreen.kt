@@ -124,7 +124,8 @@ private fun FavoritesScreenContent(
                             author = book.authors,
                             imageCover = book.coverUrl,
                             onFavorited = { onFavorited(book) },
-                            isFavorited = book.isFavorited
+                            isFavorited = book.isFavorited,
+                            onDetails = {navController.navigate("details/${book.id}")}
                         )
                     }
                 }
