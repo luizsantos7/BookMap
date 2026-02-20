@@ -1,5 +1,6 @@
 package com.example.bookmap.presentation.details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.repository.BookRepository
@@ -13,20 +14,26 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     val bookRepository: BookRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DetailUiState())
     val uiState = _uiState
 
+    private val bookId = savedStateHandle.get<String>("bookId").orEmpty()
+
+    init {
+        loadBookDetails()
+    }
+
     fun onActionEvent(action: DetailScreenAction) {
         when (action) {
-            is LoadBookDetails -> loadBookDetails(action.bookId)
+            is LoadBookDetails -> loadBookDetails()
         }
     }
 
-    private fun loadBookDetails(bookId: String?) {
+    private fun loadBookDetails() {
         _uiState.update { it.copy(isLoading = true, isContinue = false, showError = false) }
-        if (bookId == null) return
 
         viewModelScope.launch {
             bookRepository.buscarLivroPorId(bookId)

@@ -38,14 +38,11 @@ import com.example.bookmap.utils.components.NavBarComponent
 
 @Composable
 fun DetailScreen(
-    bookId: String?,
     navController: NavController,
     modifier: Modifier = Modifier,
     viewModel: DetailViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    viewModel.onActionEvent(DetailScreenAction.LoadBookDetails(bookId))
 
     DetailScreenContent(
         uiState = uiState,

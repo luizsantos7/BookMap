@@ -2,7 +2,10 @@ package com.example.bookmap.navigation
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,11 +18,14 @@ import com.example.bookmap.presentation.login.LoginScreen
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,
+    viewModel: AppNavHostViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
+   val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     NavHost(
         navController = navController,
-        startDestination = "login_screen",
+        startDestination = state.startDestination,
     ) {
         composable("login_screen") {
             LoginScreen(
@@ -40,11 +46,9 @@ fun AppNavHost(
             )
         }
 
-        composable("details/{bookId}") { backStackEntry ->
-            val bookId = backStackEntry.arguments?.getString("bookId")
+        composable("details/{bookId}") {
             DetailScreen(
-                navController = navController,
-                bookId = bookId
+                navController = navController
             )
         }
     }
