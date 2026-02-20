@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -30,6 +32,7 @@ import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDetailsDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.utils.components.DetailsDescription
+import com.example.bookmap.utils.components.FixedButton
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
 
@@ -110,10 +113,64 @@ private fun DetailScreenContent(
                 )
             }
 
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 90.dp)
+                        .padding(bottom = 10.dp)
+                ) {
+                    FixedButton(
+                        primaryClickButton = {navController.navigate("home_screen")}
+                    )
+                }
+            }
+
         }
         Column(verticalArrangement = Arrangement.Bottom) {
             Footer(navController = navController)
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true, showSystemUi = true)
+fun DetailScreenPreview() {
+    val navController = rememberNavController()
+
+    // Mock de autores
+    val mockAuthors = listOf(
+        AuthorDataModel(name = "Douglas Adams"),
+        AuthorDataModel(name = "Isaac Asimov")
+    )
+
+    // Mock do livro com todos os campos reais
+    val mockBookDetails = BookDetailsDataModel(
+        id = 1L,
+        title = "O Guia do Mochileiro das Galáxias",
+        authors = mockAuthors,
+        summaries = listOf(
+            "Um clássico da ficção científica repleto de humor e ironia.",
+            "Acompanhe as aventuras de Arthur Dent pelo universo."
+        ),
+        languages = listOf("Português", "Inglês"),
+        copyright = false,
+        coverUrl = "https://example.com/capa_livro.jpg",
+        isRead = ReadStatusDataModel.UNREAD
+    )
+
+    // Mock de estado
+    val mockUiState = DetailUiState(
+        book = mockBookDetails,
+        isLoading = false,
+        showError = false,
+        errorMessage = ""
+    )
+
+    // Renderiza o conteúdo
+    DetailScreenContent(
+        uiState = mockUiState,
+        navController = navController
+    )
 }
 

@@ -41,12 +41,10 @@ class BookRepository @Inject constructor(
 
     suspend fun buscarLivroPorId(id: String?): Result<BookDetailsDataModel> = runCatching {
         val bookResponse = bookApi.pegarLivroPorId(id)
-
         val bookDataModel = bookMapper.mapResponseToDataModel(
             response = bookResponse,
             favoriteBooks = favoriteBooks
         )
-
         bookMapper.mapDataModelToBookDetails(bookDataModel)
     }
 
