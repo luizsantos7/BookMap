@@ -3,8 +3,11 @@ package com.example.bookmap.presentation.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bookmap.data.models.BookDataModel
+import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.presentation.details.DetailScreenAction.LoadBookDetails
+import com.example.bookmap.presentation.details.DetailScreenAction.OnStatusChange
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -29,6 +32,7 @@ class DetailViewModel @Inject constructor(
     fun onActionEvent(action: DetailScreenAction) {
         when (action) {
             is LoadBookDetails -> loadBookDetails()
+            is OnStatusChange -> onStatusChange(status = action.status)
         }
     }
 
@@ -49,6 +53,16 @@ class DetailViewModel @Inject constructor(
                         errorMessage = error.localizedMessage,
                         showError = true) }
                 }
+        }
+    }
+
+    private fun onStatusChange(status: ReadStatusDataModel) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                book = currentState.book.copy(
+                    isRead = status
+                )
+            )
         }
     }
 

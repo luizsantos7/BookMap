@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -26,14 +28,15 @@ import com.example.bookmap.data.models.ReadStatusDataModel
 fun DetailsDescription(
     book: BookDetailsDataModel,
     modifier: Modifier = Modifier,
-    onStatusChange : () -> Unit = { },
+    onStatusChange: (ReadStatusDataModel) -> Unit,
     navController: NavController
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 32.dp, horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = book.title,
@@ -76,13 +79,17 @@ fun DetailsDescription(
 
         ReadStatusSelector(
             currentStatus = book.isRead,
-            onStatusChanged = { onStatusChange() },
+            onStatusChanged = { selectedStatus ->
+                onStatusChange(selectedStatus)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 72.dp, vertical = 16.dp)
         )
 
-        Button(onClick = {navController.navigate("home_screen")}) {
+        Button(
+            onClick = {navController.navigate("home_screen")},
+            shape = RoundedCornerShape(10.dp),) {
             Text(text = "Voltar")
         }
 

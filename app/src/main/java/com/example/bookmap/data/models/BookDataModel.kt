@@ -9,6 +9,6 @@ data class BookDataModel(
     val summaries: List<String> = emptyList(),
     val languages: List<String> = emptyList(),
     val coverUrl: String? = null,
-    val isRead: ReadStatusDataModel = ReadStatusDataModel.UNREAD,
+    var isRead: ReadStatusDataModel = ReadStatusDataModel.UNREAD,
     var isFavorited : Boolean = false,
 )

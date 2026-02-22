@@ -44,7 +44,12 @@ fun DetailScreen(
     DetailScreenContent(
         uiState = uiState,
         navController = navController,
-        modifier = modifier
+        modifier = modifier,
+        onStatusChange = { status ->
+            viewModel.onActionEvent(
+                DetailScreenAction.OnStatusChange(status)
+            )
+        }
     )
 }
 
@@ -53,6 +58,7 @@ private fun DetailScreenContent(
     uiState: DetailUiState,
     navController: NavController,
     modifier: Modifier = Modifier,
+    onStatusChange: (ReadStatusDataModel) -> Unit
 ) {
 
     val book = uiState.book
@@ -105,6 +111,7 @@ private fun DetailScreenContent(
                 DetailsDescription(
                     book = book,
                     navController = navController,
+                    onStatusChange = onStatusChange
                 )
             }
 
@@ -115,44 +122,4 @@ private fun DetailScreenContent(
     }
 }
 
-@Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun DetailScreenPreview() {
-    val navController = rememberNavController()
-
-    // Mock de autores
-    val mockAuthors = listOf(
-        AuthorDataModel(name = "Douglas Adams"),
-        AuthorDataModel(name = "Isaac Asimov")
-    )
-
-    // Mock do livro com todos os campos reais
-    val mockBookDetails = BookDetailsDataModel(
-        id = 1L,
-        title = "O Guia do Mochileiro das Galáxias",
-        authors = mockAuthors,
-        summaries = listOf(
-            "Um clássico da ficção científica repleto de humor e ironia.",
-            "Acompanhe as aventuras de Arthur Dent pelo universo."
-        ),
-        languages = listOf("Português", "Inglês"),
-        copyright = false,
-        coverUrl = "https://example.com/capa_livro.jpg",
-        isRead = ReadStatusDataModel.UNREAD
-    )
-
-    // Mock de estado
-    val mockUiState = DetailUiState(
-        book = mockBookDetails,
-        isLoading = false,
-        showError = false,
-        errorMessage = ""
-    )
-
-    // Renderiza o conteúdo
-    DetailScreenContent(
-        uiState = mockUiState,
-        navController = navController
-    )
-}
 
