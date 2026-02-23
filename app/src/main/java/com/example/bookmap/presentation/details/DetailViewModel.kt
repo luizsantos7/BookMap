@@ -3,7 +3,6 @@ package com.example.bookmap.presentation.details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.data.repository.StatusRepository
@@ -64,15 +63,13 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun onStatusChange(status: ReadStatusDataModel) {
-        val oldBook = _uiState.value.book
-        val oldStatus = oldBook.isRead
+        val book = _uiState.value.book
 
+        statusRepository.removeBook(bookId = book.id.toString())
 
-        statusRepository.removeStatus(book = oldBook.copy(isRead = oldStatus))
+        val updatedBook = book.copy(isRead = status)
 
-        val updatedBook = oldBook.copy(isRead = status)
-
-        statusRepository.addStatus(status = status, book = updatedBook)
+        statusRepository.addBook(book = updatedBook)
 
         _uiState.update { currentState ->
             currentState.copy(book = updatedBook)

@@ -46,19 +46,15 @@ class ProfileViewModel @Inject constructor(
             _UiState.update { it.copy(isLoading = true, showError = false) }
 
             try {
-                val reading = statusRepository.getBooksByStatus(ReadStatusDataModel.READING)
-                val read = statusRepository.getBooksByStatus(ReadStatusDataModel.READ)
-                val unread = statusRepository.getBooksByStatus(ReadStatusDataModel.UNREAD)
-                val paused = statusRepository.getBooksByStatus(ReadStatusDataModel.PAUSED)
-                val dropped = statusRepository.getBooksByStatus(ReadStatusDataModel.DROPPED)
+                val books = statusRepository.getBooks()
 
                 _UiState.update { current ->
                     current.copy(
-                        readingBooks = reading,
-                        readBooks = read,
-                        unreadBooks = unread,
-                        pausedBooks = paused,
-                        droppedBooks = dropped,
+                        readingBooks = books.filter { it.isRead == ReadStatusDataModel.READING },
+                        readBooks = books.filter { it.isRead == ReadStatusDataModel.READ },
+                        unreadBooks = books.filter { it.isRead == ReadStatusDataModel.UNREAD },
+                        pausedBooks = books.filter { it.isRead == ReadStatusDataModel.PAUSED },
+                        droppedBooks = books.filter { it.isRead == ReadStatusDataModel.DROPPED },
                         isLoading = false
                     )
                 }
