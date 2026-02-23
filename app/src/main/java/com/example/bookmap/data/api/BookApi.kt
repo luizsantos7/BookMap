@@ -10,8 +10,8 @@ interface BookApi {
     @GET("books")
     suspend fun listarLivros(): RootResponse
 
-    @GET("books?languages={language}")
-    suspend fun listarLivrosPorLinguagem(@Path("language") language:String):RootResponse
+//    @GET("books?languages={language}")
+//    suspend fun listarLivrosPorLinguagem(@Path("language") language:String):RootResponse
 
     @GET("books")
     suspend fun listarLivrosPorNome(
