@@ -35,7 +35,7 @@ class StatusRepository @Inject constructor(
             .delete()
     }
 
-    suspend fun getBooksBySatus(status: ReadStatusDataModel): List<BookDataModel> {
+    suspend fun getBooksByStatus(status: ReadStatusDataModel): List<BookDataModel> {
         val snapshot = statusCollection
             .document(status.name)
             .collection("books")

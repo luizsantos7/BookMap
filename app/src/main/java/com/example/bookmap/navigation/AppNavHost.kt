@@ -14,6 +14,7 @@ import com.example.bookmap.presentation.details.DetailScreen
 import com.example.bookmap.presentation.favorite.FavoriteScreen
 import com.example.bookmap.presentation.home.HomeScreen
 import com.example.bookmap.presentation.login.LoginScreen
+import com.example.bookmap.presentation.profile.ProfileScreen
 
 @Composable
 fun AppNavHost(
@@ -21,7 +22,7 @@ fun AppNavHost(
     viewModel: AppNavHostViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
-   val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     NavHost(
         navController = navController,
@@ -48,6 +49,11 @@ fun AppNavHost(
 
         composable("details/{bookId}") {
             DetailScreen(
+                navController = navController
+            )
+        }
+        composable("profile_screen") {
+            ProfileScreen(
                 navController = navController
             )
         }
