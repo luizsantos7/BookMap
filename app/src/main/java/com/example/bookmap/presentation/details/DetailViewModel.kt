@@ -54,7 +54,7 @@ class DetailViewModel @Inject constructor(
                 .onFailure { error ->
                     _uiState.update {
                         it.copy(
-                            errorMessage = error.localizedMessage,
+                            errorMessage = "erro ao carregar detalhes do livro",
                             showError = true
                         )
                     }

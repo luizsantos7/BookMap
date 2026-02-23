@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -30,6 +32,7 @@ import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDetailsDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.utils.components.DetailsDescription
+import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
 
@@ -70,51 +73,81 @@ private fun DetailScreenContent(
     ) {
         NavBarComponent()
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                Box(
-                    modifier = modifier
+        when {
+            uiState.isLoading -> {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .height(250.dp)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color(0xFF3D3D3D),
-                                    Color(0xFF171D23)
-                                ),
-                                startY = 0f,
-                                endY = Float.POSITIVE_INFINITY
-                            )
-                        ),
-                    contentAlignment = Alignment.Center
+                        .padding(16.dp)
+                        .weight(1f)
                 ) {
-                    AsyncImage(
-                        model = book.coverUrl,
-                        contentDescription = "Capa do livro",
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .height(220.dp)
-                            .width(150.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(Color.Gray),
+                    CircularProgressIndicator(color = Color.White)
+                    Text(
+                        text = "Carregando detalhes...",
+                        color = Color.Gray,
+                        modifier = Modifier.padding(top = 16.dp)
                     )
                 }
             }
 
-
-            item {
-                DetailsDescription(
-                    book = book,
-                    navController = navController,
-                    onStatusChange = onStatusChange
+            uiState.showError -> {
+                ErrorContent(
+                    modifier = Modifier.weight(1f),
+                    errorMessage = uiState.errorMessage,
                 )
             }
 
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    item {
+                        Box(
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .height(250.dp)
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color(0xFF3D3D3D),
+                                            Color(0xFF171D23)
+                                        ),
+                                        startY = 0f,
+                                        endY = Float.POSITIVE_INFINITY
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            AsyncImage(
+                                model = book.coverUrl,
+                                contentDescription = "Capa do livro",
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .height(220.dp)
+                                    .width(150.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.Gray),
+                            )
+                        }
+                    }
+
+
+                    item {
+                        DetailsDescription(
+                            book = book,
+                            navController = navController,
+                            onStatusChange = onStatusChange
+                        )
+                    }
+
+                }
+
+            }
         }
         Column(verticalArrangement = Arrangement.Bottom) {
             Footer(navController = navController)
