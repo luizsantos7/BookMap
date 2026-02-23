@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -100,43 +101,44 @@ private fun ProfileScreenContent(
             }
 
             else -> {
-                Column(
+                LazyColumn(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                         .weight(1f)
                 ) {
+                    item {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(com.example.bookmap.R.drawable.icone_perfil),
+                                contentDescription = "Foto de perfil",
+                                modifier = Modifier
+                                    .size(165.dp)
+                                    .clip(CircleShape)
+                            )
+                            Text(
+                                text = uiState.user.profile.name.ifEmpty { "Usuário sem nome" },
+                                color = Color.White,
+                                modifier = Modifier.padding(top = 16.dp),
+                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                            )
+                            Text(
+                                text = uiState.user.email.ifEmpty { "Email não disponível" },
+                                color = Color.Gray,
+                                modifier = Modifier.padding(top = 8.dp),
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    }
 
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(
-                            8.dp,
-                            Alignment.CenterVertically
-                        ),
-                    ) {
-                        Image(
-                            painter = painterResource(com.example.bookmap.R.drawable.icone_perfil),
-                            contentDescription = "Foto de perfil",
-                            modifier = Modifier
-                                .size(165.dp)
-                                .clip(CircleShape)
-                        )
-                        Text(
-                            text = uiState.user.profile.name.ifEmpty { "Usuário sem nome" },
-                            color = Color.White,
-                            modifier = Modifier.padding(top = 16.dp),
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                        )
-                        Text(
-                            text = uiState.user.email.ifEmpty { "Email não disponível" },
-                            color = Color.Gray,
-                            modifier = Modifier.padding(top = 8.dp),
-                            style = MaterialTheme.typography.labelLarge
-                        )
-                        if (readingBooks.isNotEmpty()) {
-                            Text(text = "Lendo",
+                    if (readingBooks.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "Lendo",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White,
                             )
@@ -145,9 +147,12 @@ private fun ProfileScreenContent(
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
+                    }
 
-                        if (readBooks.isNotEmpty()) {
-                            Text(text = "Lidos",
+                    if (readBooks.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "Lidos",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White,
                             )
@@ -156,9 +161,12 @@ private fun ProfileScreenContent(
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
+                    }
 
-                        if (unreadBooks.isNotEmpty()) {
-                            Text(text = "Pretende Ler",
+                    if (unreadBooks.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "Pretende Ler",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White,
                             )
@@ -167,9 +175,12 @@ private fun ProfileScreenContent(
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
+                    }
 
-                        if (pausedBooks.isNotEmpty()) {
-                            Text(text = "Pausados",
+                    if (pausedBooks.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "Pausados",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White,
                             )
@@ -178,9 +189,12 @@ private fun ProfileScreenContent(
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
+                    }
 
-                        if (droppedBooks.isNotEmpty()) {
-                            Text(text = "Desistidos",
+                    if (droppedBooks.isNotEmpty()) {
+                        item {
+                            Text(
+                                text = "Desistidos",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.White,
                             )
@@ -191,15 +205,16 @@ private fun ProfileScreenContent(
                         }
                     }
                 }
+                Column(
+                    verticalArrangement = Arrangement.Bottom
+                ) {
+                    Footer(navController = navController)
+                }
             }
-        }
-        Column(
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            Footer(navController = navController)
         }
     }
 }
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

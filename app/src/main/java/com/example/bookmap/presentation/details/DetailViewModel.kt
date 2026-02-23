@@ -44,29 +44,38 @@ class DetailViewModel @Inject constructor(
         viewModelScope.launch {
             bookRepository.buscarLivroPorId(bookId)
                 .onSuccess { bookDetails ->
-                    _uiState.update { it.copy(
-                        book = bookDetails,
-                        isContinue = true,
-                        isLoading = false
-                    ) }
+                    _uiState.update {
+                        it.copy(
+                            book = bookDetails,
+                            isContinue = true,
+                            isLoading = false
+                        )
+                    }
                 }
                 .onFailure { error ->
-                    _uiState.update { it.copy(
-                        errorMessage = error.localizedMessage,
-                        showError = true) }
+                    _uiState.update {
+                        it.copy(
+                            errorMessage = error.localizedMessage,
+                            showError = true
+                        )
+                    }
                 }
         }
     }
 
     private fun onStatusChange(status: ReadStatusDataModel) {
-        statusRepository.removeStatus(book = _uiState.value.book)
+        val oldBook = _uiState.value.book
+        val oldStatus = oldBook.isRead
+
+
+        statusRepository.removeStatus(book = oldBook.copy(isRead = oldStatus))
+
+        val updatedBook = oldBook.copy(isRead = status)
+
+        statusRepository.addStatus(status = status, book = updatedBook)
+
         _uiState.update { currentState ->
-            statusRepository.addStatus(status = status, book = _uiState.value.book)
-            currentState.copy(
-                book = currentState.book.copy(
-                    isRead = status
-                )
-            )
+            currentState.copy(book = updatedBook)
         }
     }
 }
