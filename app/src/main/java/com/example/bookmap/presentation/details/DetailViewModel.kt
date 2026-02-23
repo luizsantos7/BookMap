@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.data.repository.BookRepository
+import com.example.bookmap.data.repository.StatusRepository
 import com.example.bookmap.presentation.details.DetailScreenAction.LoadBookDetails
 import com.example.bookmap.presentation.details.DetailScreenAction.OnStatusChange
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     val bookRepository: BookRepository,
+    val statusRepository: StatusRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -57,7 +59,9 @@ class DetailViewModel @Inject constructor(
     }
 
     private fun onStatusChange(status: ReadStatusDataModel) {
+        statusRepository.removeStatus(book = _uiState.value.book)
         _uiState.update { currentState ->
+            statusRepository.addStatus(status = status, book = _uiState.value.book)
             currentState.copy(
                 book = currentState.book.copy(
                     isRead = status
@@ -65,5 +69,4 @@ class DetailViewModel @Inject constructor(
             )
         }
     }
-
 }
