@@ -101,14 +101,14 @@ private fun DetailScreenContent(
 
             else -> {
                 LazyColumn(
-                    modifier = Modifier
+                    modifier = modifier
                         .fillMaxSize()
                         .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     item {
                         Box(
-                            modifier = modifier
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .height(250.dp)
                                 .background(
