@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookmap.utils.ui.theme.ErrorBorderColor
@@ -46,6 +47,7 @@ fun OutlineTextComponent(
     focusedBorderColor: Color = Color(0xFF6200EE),
     unfocusedBorderColor: Color = Color.Gray,
     errorBorderColor: Color = ErrorBorderColor,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     OutlinedTextField(
         value = value,
@@ -79,7 +81,8 @@ fun OutlineTextComponent(
             disabledBorderColor = borderColor.copy(alpha = 0.5f)
         ),
         keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions
+        keyboardActions = keyboardActions,
+        visualTransformation = visualTransformation
     )
 }
 

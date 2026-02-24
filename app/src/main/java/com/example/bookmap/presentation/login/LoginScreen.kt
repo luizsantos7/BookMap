@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -142,7 +143,8 @@ fun LoginScreen(
                     placeholder = "Digite sua senha",
                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                     isError = password.length < 6 && password.isNotEmpty(),
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
+                    visualTransformation = PasswordVisualTransformation()
                 )
 
             }
@@ -159,7 +161,7 @@ fun LoginScreen(
                 primaryClickButton = {
                     viewModel.onSubmitLogin(email = email, password = password)
                 },
-                secundaryClickButton = {navController.navigate("home_screen")},
+                secundaryClickButton = {},
                 modifier = Modifier
                     .padding(horizontal = 48.dp),
                 enabled = viewModel.enableLoginButton()

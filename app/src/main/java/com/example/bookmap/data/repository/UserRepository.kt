@@ -1,5 +1,6 @@
 package com.example.bookmap.data.repository
 
+import com.example.bookmap.data.models.Profile
 import com.example.bookmap.data.models.UserRegisterDataModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,6 +42,28 @@ class UserRepository @Inject constructor(
             .addOnFailureListener {
                 onFailure()
             }
+    }
+
+    fun loadUserProfile(
+        uid: String,
+        onSuccess: (Profile) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        firestore
+            .collection("users")
+            .document(uid)
+            .collection("profile")
+            .limit(1)
+            .get()
+            .addOnSuccessListener { result ->
+                val profile = result.documents.firstOrNull()?.toObject(Profile::class.java)
+                if (profile != null) {
+                    onSuccess(profile)
+                } else {
+                    onFailure(Exception("Perfil não encontrado"))
+                }
+            }
+            .addOnFailureListener { e -> onFailure(e) }
     }
 
 

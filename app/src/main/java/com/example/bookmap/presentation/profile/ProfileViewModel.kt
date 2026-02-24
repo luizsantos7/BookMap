@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.data.repository.StatusRepository
+import com.example.bookmap.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val auth: FirebaseAuth,
-    private val statusRepository: StatusRepository
+    private val statusRepository: StatusRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _UiState = MutableStateFlow(ProfileUiState())
     val uiState = _UiState
@@ -25,16 +27,37 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun loadUserData() {
-        val user = auth.currentUser
+        val user = auth.currentUser ?: return
+
         _UiState.update { it.copy(isLoading = true, showError = false) }
 
         _UiState.update {
+            userRepository.loadUserProfile(
+                uid = user.uid,
+                onSuccess = { profile ->
+                    _UiState.update {
+                        it.copy(
+                            user = it.user.copy(
+                                email = user.email ?: "",
+                                profile = profile
+                            ),
+                            isLoading = false,
+                        )
+                    }
+                },
+                onFailure = {
+                    _UiState.update {
+                        it.copy(
+                            isLoading = false,
+                            showError = true,
+                        )
+                    }
+                }
+            )
             it.copy(
                 user = it.user.copy(
-                    email = user?.email ?: "",
-                    profile = it.user.profile.copy(
-                        name = user?.displayName ?: ""
-                    )
+                    email = user.email ?: "",
+                    profile = it.user.profile
                 ),
                 isLoading = false,
             )

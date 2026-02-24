@@ -55,11 +55,11 @@ fun ReadStatusSelector(
     ) {
         TextField(
             value = when (currentStatus) {
-                ReadStatusDataModel.UNREAD -> "Não lido"
+                ReadStatusDataModel.UNREAD -> "Pretendo ler"
                 ReadStatusDataModel.READ -> "Lido"
                 ReadStatusDataModel.READING -> "Lendo"
                 ReadStatusDataModel.PAUSED -> "Pausado"
-                ReadStatusDataModel.DROPPED -> "Abandonado"
+                ReadStatusDataModel.DROPPED -> "Desistido"
             },
             onValueChange = {},
             readOnly = true,
