@@ -88,7 +88,7 @@ fun DetailsDescription(
         )
 
         Button(
-            onClick = {navController.navigate("home_screen")},
+            onClick = {navController.popBackStack()},
             shape = RoundedCornerShape(10.dp),) {
             Text(text = "Voltar")
         }

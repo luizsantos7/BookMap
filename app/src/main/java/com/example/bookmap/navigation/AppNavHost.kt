@@ -34,12 +34,6 @@ fun AppNavHost(
                 navController = navController
             )
         }
-        composable("home_screen") {
-            HomeScreen(
-                modifier = modifier,
-                navController = navController
-            )
-        }
         composable("favorite_screen") {
             FavoriteScreen(
                 modifier = modifier,
@@ -54,6 +48,12 @@ fun AppNavHost(
         }
         composable("profile_screen") {
             ProfileScreen(
+                navController = navController
+            )
+        }
+        composable("home_screen") {
+            HomeScreen(
+                modifier = modifier,
                 navController = navController
             )
         }

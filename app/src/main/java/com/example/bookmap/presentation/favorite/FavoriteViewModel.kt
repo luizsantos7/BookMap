@@ -38,6 +38,7 @@ class FavoriteViewModel @Inject constructor(
             } catch (e: Exception) {
                 emptyList()
             }
+            favorites.forEach { it.isFavorited = true }
 
             _uiState.update {
                 it.copy(

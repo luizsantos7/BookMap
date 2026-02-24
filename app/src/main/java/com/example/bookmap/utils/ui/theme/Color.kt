@@ -12,7 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 //FixedButton  Colors
 val PrimaryButtonLogin = Color(0xFF496D78)
-val SecundaryButtonLogin = Color(0xFFFFEB3B)
+val SecundaryButtonLogin = Color(0xFFA19C7D)
 
 //OutlinedTextField Colors
 val UnfocusField = Color(0xFF262A33)

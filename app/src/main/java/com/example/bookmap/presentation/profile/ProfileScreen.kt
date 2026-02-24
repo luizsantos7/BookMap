@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,8 +35,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.models.Profile
-import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.data.models.UserRegisterDataModel
+import com.example.bookmap.presentation.profile.ProfileScreenAction.LoadProfileData
+import com.example.bookmap.presentation.profile.ProfileScreenAction.removeBook
 import com.example.bookmap.utils.components.BookStatusRow
 import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
@@ -53,11 +56,13 @@ fun ProfileScreen(
         uiState = uiState,
         navController = navController,
         modifier = modifier,
+        removeBookClick =  { book -> viewModel.onActionEvent(removeBook(book)) }
     )
 
     LaunchedEffect(Unit) {
-        viewModel.loadProfileData()
+        viewModel.onActionEvent(LoadProfileData)
     }
+
 
 }
 
@@ -66,6 +71,7 @@ private fun ProfileScreenContent(
     uiState: ProfileUiState,
     navController: NavController,
     modifier: Modifier = Modifier,
+    removeBookClick : (BookDataModel) -> Unit = { }
 ) {
 
     val readingBooks = uiState.readingBooks
@@ -155,7 +161,8 @@ private fun ProfileScreenContent(
                                 )
                                 BookStatusRow(
                                     bookList = readingBooks,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    removeBookClick = removeBookClick
                                 )
                             }
                         }
@@ -174,7 +181,8 @@ private fun ProfileScreenContent(
                                 )
                                 BookStatusRow(
                                     bookList = readBooks,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    removeBookClick = removeBookClick
                                 )
                             }
                         }
@@ -193,7 +201,8 @@ private fun ProfileScreenContent(
                                 )
                                 BookStatusRow(
                                     bookList = unreadBooks,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    removeBookClick = removeBookClick
                                 )
                             }
                         }
@@ -212,7 +221,8 @@ private fun ProfileScreenContent(
                                 )
                                 BookStatusRow(
                                     bookList = pausedBooks,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    removeBookClick = removeBookClick
                                 )
                             }
                         }
@@ -231,7 +241,8 @@ private fun ProfileScreenContent(
                                 )
                                 BookStatusRow(
                                     bookList = droppedBooks,
-                                    modifier = Modifier.fillMaxWidth()
+                                    modifier = Modifier.fillMaxWidth(),
+                                    removeBookClick = removeBookClick
                                 )
                             }
                         }
@@ -247,8 +258,12 @@ private fun ProfileScreenContent(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 65.dp),
-                            shape = RoundedCornerShape(5.dp),
+                                .height(75.dp)
+                                .padding(horizontal = 95.dp, vertical = 15.dp),
+                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFA19C7D)
+                            )
                         ) {
                             Text("Sair da conta")
                         }
@@ -326,10 +341,6 @@ fun ProfileScreenPreview_Fake() {
         errorMessage = "",
         user = fakeUser,
         readingBooks = fakeBooks.take(1),
-        readBooks = fakeBooks.drop(1),
-        unreadBooks = fakeBooks,
-        pausedBooks = fakeBooks.take(2),
-        droppedBooks = fakeBooks.take(1)
     )
 
     val navController = rememberNavController()

@@ -2,9 +2,16 @@ package com.example.bookmap.presentation.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.bookmap.data.models.ReadStatusDataModel
+import com.example.bookmap.data.models.BookDataModel
+import com.example.bookmap.data.models.ReadStatusDataModel.DROPPED
+import com.example.bookmap.data.models.ReadStatusDataModel.PAUSED
+import com.example.bookmap.data.models.ReadStatusDataModel.READ
+import com.example.bookmap.data.models.ReadStatusDataModel.READING
+import com.example.bookmap.data.models.ReadStatusDataModel.UNREAD
 import com.example.bookmap.data.repository.StatusRepository
 import com.example.bookmap.data.repository.UserRepository
+import com.example.bookmap.presentation.profile.ProfileScreenAction.LoadProfileData
+import com.example.bookmap.presentation.profile.ProfileScreenAction.removeBook
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +31,39 @@ class ProfileViewModel @Inject constructor(
 
     init {
         loadUserData()
+    }
+
+    fun onActionEvent(action: ProfileScreenAction) {
+        when (action) {
+            is LoadProfileData -> loadProfileData()
+            is removeBook -> removeClicked(action.book)
+        }
+    }
+
+    private fun removeClicked(book: BookDataModel) {
+        _UiState.update { state ->
+            when (book.isRead) {
+                READING -> state.copy(
+                    readingBooks = state.readingBooks.filter { it.id != book.id }
+                )
+
+                READ -> state.copy(
+                    readBooks = state.readBooks.filter { it.id != book.id }
+                )
+
+                UNREAD -> state.copy(
+                    unreadBooks = state.unreadBooks.filter { it.id != book.id }
+                )
+
+                PAUSED -> state.copy(
+                    pausedBooks = state.pausedBooks.filter { it.id != book.id }
+                )
+
+                DROPPED -> state.copy(
+                    droppedBooks = state.droppedBooks.filter { it.id != book.id }
+                )
+            }
+        }
     }
 
     private fun loadUserData() {
@@ -64,7 +104,8 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun loadProfileData() {
+
+    private fun loadProfileData() {
         viewModelScope.launch {
             _UiState.update { it.copy(isLoading = true, showError = false) }
 
@@ -73,11 +114,11 @@ class ProfileViewModel @Inject constructor(
 
                 _UiState.update { current ->
                     current.copy(
-                        readingBooks = books.filter { it.isRead == ReadStatusDataModel.READING },
-                        readBooks = books.filter { it.isRead == ReadStatusDataModel.READ },
-                        unreadBooks = books.filter { it.isRead == ReadStatusDataModel.UNREAD },
-                        pausedBooks = books.filter { it.isRead == ReadStatusDataModel.PAUSED },
-                        droppedBooks = books.filter { it.isRead == ReadStatusDataModel.DROPPED },
+                        readingBooks = books.filter { it.isRead == READING },
+                        readBooks = books.filter { it.isRead == READ },
+                        unreadBooks = books.filter { it.isRead == UNREAD },
+                        pausedBooks = books.filter { it.isRead == PAUSED },
+                        droppedBooks = books.filter { it.isRead == DROPPED },
                         isLoading = false
                     )
                 }

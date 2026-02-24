@@ -55,9 +55,9 @@ fun ReadStatusSelector(
     ) {
         TextField(
             value = when (currentStatus) {
-                ReadStatusDataModel.UNREAD -> "Pretendo ler"
                 ReadStatusDataModel.READ -> "Lido"
                 ReadStatusDataModel.READING -> "Lendo"
+                ReadStatusDataModel.UNREAD -> "Pretendo ler"
                 ReadStatusDataModel.PAUSED -> "Pausado"
                 ReadStatusDataModel.DROPPED -> "Desistido"
             },
@@ -117,11 +117,11 @@ fun ReadStatusSelector(
                     text = {
                         Text(
                             text = when (status) {
-                                ReadStatusDataModel.UNREAD -> "Não lido"
                                 ReadStatusDataModel.READ -> "Lido"
                                 ReadStatusDataModel.READING -> "Lendo"
+                                ReadStatusDataModel.UNREAD -> "Pretendo ler"
                                 ReadStatusDataModel.PAUSED -> "Pausado"
-                                ReadStatusDataModel.DROPPED -> "Abandonado"
+                                ReadStatusDataModel.DROPPED -> "Desistido"
                             },
                             color = if (status == currentStatus)
                                 selectedItemColor
