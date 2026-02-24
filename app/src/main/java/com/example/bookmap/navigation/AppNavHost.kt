@@ -43,11 +43,13 @@ fun AppNavHost(
 
         composable("details/{bookId}") {
             DetailScreen(
+                modifier = modifier,
                 navController = navController
             )
         }
         composable("profile_screen") {
             ProfileScreen(
+                modifier = modifier,
                 navController = navController
             )
         }

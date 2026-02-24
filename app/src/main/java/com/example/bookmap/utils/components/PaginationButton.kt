@@ -36,7 +36,8 @@ fun PaginationButtons(
             enabled = currentPage > 1,
             shape = RoundedCornerShape(7.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFA19C7D)
+                containerColor = Color(0xFFA19C7D),
+                contentColor = Color.White
             )
         ) {
             Text("Anterior")
@@ -51,7 +52,8 @@ fun PaginationButtons(
             enabled = isContinue,
             shape = RoundedCornerShape(7.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF496D78)
+                containerColor = Color(0xFF496D78),
+                contentColor = Color.White
             ),
         ) {
             Text("Próxima")

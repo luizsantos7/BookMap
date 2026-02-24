@@ -151,13 +151,13 @@ private fun ProfileScreenContent(
                     if (readingBooks.isNotEmpty()) {
                         item {
                             Column(
-                                modifier.fillMaxWidth()
+                                Modifier.fillMaxWidth()
                             ) {
                                 Text(
                                     text = "Lendo",
                                     style = MaterialTheme.typography.titleMedium,
                                     color = Color.White,
-                                    modifier = modifier.padding(8.dp)
+                                    modifier = Modifier.padding(vertical = 8.dp)
                                 )
                                 BookStatusRow(
                                     bookList = readingBooks,
@@ -171,13 +171,13 @@ private fun ProfileScreenContent(
                     if (readBooks.isNotEmpty()) {
                         item {
                             Column(
-                                modifier.fillMaxWidth()
+                                Modifier.fillMaxWidth()
                             ) {
                                 Text(
                                     text = "Lidos",
                                     style = MaterialTheme.typography.titleMedium,
                                     color = Color.White,
-                                    modifier = modifier.padding(8.dp)
+                                    modifier = Modifier.padding(vertical = 8.dp)
                                 )
                                 BookStatusRow(
                                     bookList = readBooks,
@@ -191,13 +191,13 @@ private fun ProfileScreenContent(
                     if (unreadBooks.isNotEmpty()) {
                         item {
                             Column(
-                                modifier.fillMaxWidth()
+                                Modifier.fillMaxWidth()
                             ) {
                                 Text(
                                     text = "Pretende Ler",
                                     style = MaterialTheme.typography.titleMedium,
                                     color = Color.White,
-                                    modifier = modifier.padding(8.dp)
+                                    modifier = Modifier.padding(vertical = 8.dp)
                                 )
                                 BookStatusRow(
                                     bookList = unreadBooks,
@@ -211,13 +211,13 @@ private fun ProfileScreenContent(
                     if (pausedBooks.isNotEmpty()) {
                         item {
                             Column(
-                                modifier.fillMaxWidth()
+                                Modifier.fillMaxWidth()
                             ) {
                                 Text(
                                     text = "Pausados",
                                     style = MaterialTheme.typography.titleMedium,
                                     color = Color.White,
-                                    modifier = modifier.padding(8.dp)
+                                    modifier = Modifier.padding(vertical = 8.dp)
                                 )
                                 BookStatusRow(
                                     bookList = pausedBooks,
@@ -231,13 +231,13 @@ private fun ProfileScreenContent(
                     if (droppedBooks.isNotEmpty()) {
                         item {
                             Column(
-                                modifier.fillMaxWidth()
+                                Modifier.fillMaxWidth()
                             ) {
                                 Text(
                                     text = "Desistidos",
                                     style = MaterialTheme.typography.titleMedium,
                                     color = Color.White,
-                                    modifier = modifier.padding(8.dp)
+                                    modifier = Modifier.padding(vertical = 8.dp)
                                 )
                                 BookStatusRow(
                                     bookList = droppedBooks,
@@ -262,7 +262,8 @@ private fun ProfileScreenContent(
                                 .padding(horizontal = 95.dp, vertical = 15.dp),
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFA19C7D)
+                                containerColor = Color(0xFFA19C7D),
+                                contentColor = Color.White
                             )
                         ) {
                             Text("Sair da conta")
