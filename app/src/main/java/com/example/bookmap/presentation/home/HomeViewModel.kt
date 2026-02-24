@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.data.repository.FavoriteRepository
+import com.example.bookmap.presentation.home.HomeScreenAction.BackPage
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
 import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
+import com.example.bookmap.presentation.home.HomeScreenAction.NextPage
 import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
 import com.example.bookmap.presentation.home.HomeScreenAction.OnRetry
 import com.example.bookmap.presentation.home.HomeScreenAction.OnSearchABook
@@ -43,6 +45,8 @@ class HomeViewModel @Inject constructor(
             is GetBookBySearch -> onGetBookByName()
             is OnFavorited -> favoriteBook(action.book)
             OnRetry -> getBooks()
+            NextPage -> nextPage()
+            BackPage -> returnPage()
         }
     }
 
@@ -70,7 +74,7 @@ class HomeViewModel @Inject constructor(
             val favorites = favoriteRepository.getFavoriteBooks()
             val favoriteIds = favorites.map { it.id }.toSet()
 
-            bookRepository.buscarTodosLivros()
+            bookRepository.buscarTodosLivros(_uiState.value.page)
                 .onSuccess { books ->
                     val booksWithFav = books.map { book ->
                         book.copy(isFavorited = favoriteIds.contains(book.id))
@@ -124,6 +128,67 @@ class HomeViewModel @Inject constructor(
                             showError = true,
                             isContinue = false,
                             errorMessage = "Nenhum livro foi encontrado!"
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun nextPage() {
+        _uiState.update { it.copy(isLoading = true, showError = false) }
+
+        viewModelScope.launch {
+            val nextPage = uiState.value.page + 1
+            bookRepository.buscarTodosLivros(nextPage)
+                .onSuccess { books ->
+                    if (books.isEmpty()) {
+                        _uiState.update { it.copy(isLoading = false, isContinue = false) }
+                    } else {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                listBook = books,
+                                filteredBooks = books,
+                                page = nextPage
+                            )
+                        }
+                    }
+                }
+                .onFailure { error ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            showError = true,
+                            errorMessage = error.message ?: "Erro ao carregar mais livros"
+                        )
+                    }
+                }
+        }
+    }
+
+    private fun returnPage() {
+        if (uiState.value.page <= 1) return
+        _uiState.update { it.copy(isLoading = true, showError = false) }
+
+        viewModelScope.launch {
+            val previousPage = uiState.value.page - 1
+            bookRepository.buscarTodosLivros(previousPage)
+                .onSuccess { books ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            listBook = books,
+                            filteredBooks = books,
+                            page = previousPage
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            showError = true,
+                            errorMessage = error.message ?: "Erro ao carregar livros anteriores"
                         )
                     }
                 }

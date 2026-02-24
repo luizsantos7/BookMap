@@ -8,7 +8,9 @@ import retrofit2.http.Query
 
 interface BookApi {
     @GET("books")
-    suspend fun listarLivros(): RootResponse
+    suspend fun listarLivros(
+        @Query("page") page: Int
+    ): RootResponse
 
 //    @GET("books?languages={language}")
 //    suspend fun listarLivrosPorLinguagem(@Path("language") language:String):RootResponse

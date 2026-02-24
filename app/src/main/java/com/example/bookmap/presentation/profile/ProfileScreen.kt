@@ -280,7 +280,6 @@ fun ProfileScreenPreview_Fake() {
         )
     )
 
-    // Livros falsos com autores
     val fakeBooks = listOf(
         BookDataModel(
             id = 1,

@@ -35,6 +35,7 @@ import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
 import com.example.bookmap.utils.components.OutlineTextComponent
+import com.example.bookmap.utils.components.PaginationButtons
 import com.example.bookmap.utils.ui.theme.UnfocusField
 import com.example.bookmap.utils.ui.theme.focusFieldBorder
 
@@ -56,6 +57,8 @@ fun HomeScreen(
         modifier = modifier,
         onFavorited = { book -> viewModel.onActionEvent(OnFavorited(book)) },
         onRetry = { viewModel.onActionEvent(OnRetry) },
+        onNextPage = { viewModel.onActionEvent(NextPage) },
+        onPreviousPage = { viewModel.onActionEvent(BackPage) }
     )
 }
 
@@ -68,13 +71,16 @@ private fun HomeScreenContent(
     onSearchBook: (String) -> Unit,
     modifier: Modifier = Modifier,
     onFavorited: (BookDataModel) -> Unit,
+    onNextPage: () -> Unit = { },
+    onPreviousPage: () -> Unit = { }
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF171D23))
     ) {
-        NavBarComponent(onClick = onSearchClick,
+        NavBarComponent(
+            onClick = onSearchClick,
             visibleSearch = true
         )
 
@@ -177,11 +183,22 @@ private fun HomeScreenContent(
                             imageCover = item.coverUrl,
                             onFavorited = { onFavorited(item) },
                             isFavorited = item.isFavorited,
-                            onDetails = {navController.navigate("details/${item.id}")}
+                            onDetails = { navController.navigate("details/${item.id}") }
                         )
                     }
                 }
             }
+        }
+        AnimatedVisibility(
+            visible = !uiState.searchBook,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            PaginationButtons(
+                currentPage = uiState.page,
+                onPreviousClick = onPreviousPage,
+                onNextClick = onNextPage
+            )
         }
         Column(
             verticalArrangement = Arrangement.Bottom

@@ -48,8 +48,8 @@ class BookRepository @Inject constructor(
         bookMapper.mapDataModelToBookDetails(bookDataModel)
     }
 
-    suspend fun buscarTodosLivros(): Result<List<BookDataModel>> = runCatching {
-        bookApi.listarLivros().results.map {
+    suspend fun buscarTodosLivros(page : Int = 1): Result<List<BookDataModel>> = runCatching {
+        bookApi.listarLivros(page).results.map {
             bookMapper.mapResponseToDataModel(it, favoriteBooks)
         }
     }
