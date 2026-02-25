@@ -15,4 +15,5 @@ data class HomeUiState(
     val errorMessage: String = "",
     val user : UserRegister = UserRegister(),
     val page : Int = 1,
+    val readingBooks: List<BookDataModel> = emptyList(),
 )

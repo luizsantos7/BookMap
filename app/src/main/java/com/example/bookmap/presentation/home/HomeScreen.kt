@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.presentation.home.HomeScreenAction.*
 import com.example.bookmap.utils.card.BookCard
+import com.example.bookmap.utils.components.BookStatusRow
 import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
@@ -176,6 +177,24 @@ private fun HomeScreenContent(
                         .fillMaxSize()
                         .weight(1f),
                 ) {
+                    item {
+                        Column(
+                            Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "Continue Lendo",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.White,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
+                            if (!uiState.searchBook) {
+                                BookStatusRow(
+                                    bookList = uiState.readingBooks,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
+                        }
+                    }
                     items(uiState.filteredBooks) { item ->
                         BookCard(
                             title = item.title,

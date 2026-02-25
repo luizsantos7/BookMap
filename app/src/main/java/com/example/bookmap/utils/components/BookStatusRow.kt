@@ -27,7 +27,7 @@ import com.example.bookmap.utils.card.BookCardProfile
 fun BookStatusRow(
     modifier: Modifier = Modifier,
     bookList: List<BookDataModel>,
-    removeBookClick : (BookDataModel) -> Unit
+    removeBookClick : (BookDataModel) -> Unit = {}
 ) {
     Column() {
         LazyRow(

@@ -3,8 +3,10 @@ package com.example.bookmap.presentation.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.models.BookDataModel
+import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.data.repository.FavoriteRepository
+import com.example.bookmap.data.repository.StatusRepository
 import com.example.bookmap.presentation.home.HomeScreenAction.BackPage
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
 import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
@@ -27,10 +29,13 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     val bookRepository: BookRepository,
     val favoriteRepository: FavoriteRepository,
+    val statusRepository: StatusRepository,
     private val auth: FirebaseAuth
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState
+
+    private val pageCache = mutableMapOf<Int, List<BookDataModel>>()
 
     private var searchJob: Job? = null
 
@@ -71,6 +76,12 @@ class HomeViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true, showError = false, isContinue = false) }
 
         viewModelScope.launch {
+            val books = statusRepository.getBooks()
+
+            _uiState.update {
+                it.copy(
+                    readingBooks = books.filter { it.isRead == ReadStatusDataModel.READING })
+            }
             val favorites = favoriteRepository.getFavoriteBooks()
             val favoriteIds = favorites.map { it.id }.toSet()
 
@@ -139,11 +150,27 @@ class HomeViewModel @Inject constructor(
 
         viewModelScope.launch {
             val nextPage = uiState.value.page + 1
+
+            val cachedBooks = pageCache[nextPage]
+            if (cachedBooks != null) {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        listBook = cachedBooks,
+                        filteredBooks = cachedBooks,
+                        page = nextPage
+                    )
+                }
+                return@launch
+            }
+
             bookRepository.buscarTodosLivros(nextPage)
                 .onSuccess { books ->
                     if (books.isEmpty()) {
                         _uiState.update { it.copy(isLoading = false, isContinue = false) }
                     } else {
+                        pageCache[nextPage] = books
+
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
@@ -167,13 +194,30 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun returnPage() {
-        if (uiState.value.page <= 1) return
+        val currentPage = uiState.value.page
+        if (currentPage <= 1) return
+
         _uiState.update { it.copy(isLoading = true, showError = false) }
 
         viewModelScope.launch {
-            val previousPage = uiState.value.page - 1
+            val previousPage = currentPage - 1
+
+            val cachedBooks = pageCache[previousPage]
+            if (cachedBooks != null) {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        listBook = cachedBooks,
+                        filteredBooks = cachedBooks,
+                        page = previousPage
+                    )
+                }
+                return@launch
+            }
+
             bookRepository.buscarTodosLivros(previousPage)
                 .onSuccess { books ->
+                    pageCache[previousPage] = books
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -194,6 +238,7 @@ class HomeViewModel @Inject constructor(
                 }
         }
     }
+
 
     private fun onClickSearchIcon() {
         if (_uiState.value.searchBook) {
