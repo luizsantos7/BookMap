@@ -162,7 +162,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = readingBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -182,7 +183,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = readBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -202,7 +204,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = unreadBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -222,7 +225,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = pausedBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -242,7 +246,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = droppedBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }

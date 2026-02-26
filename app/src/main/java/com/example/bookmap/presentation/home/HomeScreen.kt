@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,7 +21,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,7 +62,6 @@ fun HomeScreen(
         onFavorited = { book -> viewModel.onActionEvent(OnFavorited(book)) },
         onRetry = { viewModel.onActionEvent(OnRetry) },
         onNextPage = { viewModel.onActionEvent(NextPage) },
-        onPreviousPage = { viewModel.onActionEvent(BackPage) }
     )
 }
 
@@ -73,7 +75,6 @@ private fun HomeScreenContent(
     modifier: Modifier = Modifier,
     onFavorited: (BookDataModel) -> Unit,
     onNextPage: () -> Unit = { },
-    onPreviousPage: () -> Unit = { }
 ) {
     Column(
         modifier = modifier
@@ -172,7 +173,25 @@ private fun HomeScreenContent(
             }
 
             else -> {
+                val listState = rememberLazyListState()
+
+                LaunchedEffect(listState) {
+                    snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index }
+                        .collect { lastVisibleItemIndex ->
+                            val totalItems = listState.layoutInfo.totalItemsCount
+
+                            // Quando estiver nos últimos 3 itens, carrega a próxima página
+                            if (lastVisibleItemIndex != null &&
+                                lastVisibleItemIndex >= totalItems - 3 &&
+                                !uiState.isLoading
+                            ) {
+                                onNextPage()
+                            }
+                        }
+                }
+
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f),
@@ -205,20 +224,24 @@ private fun HomeScreenContent(
                             onDetails = { navController.navigate("details/${item.id}") }
                         )
                     }
+
+                    if (uiState.listBookNewPageLoading) {
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                CircularProgressIndicator(color = Color.White)
+                                Text("Carregando mais livros...", color = Color.Gray)
+                            }
+                        }
+                    }
                 }
             }
         }
-        AnimatedVisibility(
-            visible = !uiState.searchBook,
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            PaginationButtons(
-                currentPage = uiState.page,
-                onPreviousClick = onPreviousPage,
-                onNextClick = onNextPage
-            )
-        }
+
         Column(
             verticalArrangement = Arrangement.Bottom
         ) {

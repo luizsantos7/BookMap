@@ -23,12 +23,6 @@ class StatusRepository @Inject constructor(
             .set(book)
     }
 
-//    fun updateBook(book: BookDetailsDataModel) {
-//        booksCollection
-//            .document(book.id.toString())
-//            .update("read", book.isRead)
-//    }
-
     fun removeBook(bookId: String) {
         booksCollection
             .document(bookId)

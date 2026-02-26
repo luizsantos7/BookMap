@@ -27,7 +27,8 @@ import com.example.bookmap.utils.card.BookCardProfile
 fun BookStatusRow(
     modifier: Modifier = Modifier,
     bookList: List<BookDataModel>,
-    removeBookClick : (BookDataModel) -> Unit = {}
+    removeBookClick : (BookDataModel) -> Unit = {},
+    clickable: Boolean = false
 ) {
     Column() {
         LazyRow(
@@ -41,6 +42,7 @@ fun BookStatusRow(
         ) {
             items(bookList) { book ->
                 BookCardProfile(
+                    clickable = clickable,
                     imageCover = book.coverUrl,
                     removeBookClick = { removeBookClick(book) })
             }

@@ -10,6 +10,7 @@ data class HomeUiState(
     val listBook: List<BookDataModel> = emptyList(),
     val filteredBooks: List<BookDataModel> = emptyList(),
     val isLoading: Boolean = false,
+    val listBookNewPageLoading: Boolean = false,
     val showError: Boolean = false,
     val isContinue: Boolean = false,
     val errorMessage: String = "",

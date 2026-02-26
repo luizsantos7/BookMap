@@ -34,28 +34,51 @@ import kotlinx.coroutines.launch
 fun BookCardProfile(
     modifier: Modifier = Modifier,
     imageCover: String? = EMPTY_STRING,
-    removeBookClick: () -> Unit = { }
+    removeBookClick: () -> Unit = { },
+    clickable: Boolean = false
 ) {
     var visivel by remember { mutableStateOf(true) }
 
-    AnimatedVisibility(
-        visible = visivel,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
+    if (clickable) {
+        AnimatedVisibility(
+            visible = visivel,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            Card(
+                modifier = modifier
+                    .width(120.dp)
+                    .height(160.dp)
+                    .padding(horizontal = 6.dp)
+                    .clickable(onClick = {
+                        visivel = false
+
+                        GlobalScope.launch {
+                            delay(300)
+                            removeBookClick()
+                        }
+                    }),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF15191E)),
+                shape = RoundedCornerShape(6.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                AsyncImage(
+                    model = imageCover,
+                    contentDescription = "Book Cover",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                    onLoading = { Log.d("BookCard", "Loading image...") },
+                    onSuccess = { Log.d("BookCard", "Image loaded!") },
+                    onError = { Log.e("BookCard", "Error: ${it.result.throwable.message}") }
+                )
+            }
+        }
+    } else {
         Card(
             modifier = modifier
                 .width(120.dp)
                 .height(160.dp)
-                .padding(horizontal = 6.dp)
-                .clickable(onClick = {
-                    visivel  = false
-
-                    GlobalScope.launch {
-                        delay(300)
-                        removeBookClick()
-                    }
-                }),
+                .padding(horizontal = 6.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF15191E)),
             shape = RoundedCornerShape(6.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -72,6 +95,7 @@ fun BookCardProfile(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
