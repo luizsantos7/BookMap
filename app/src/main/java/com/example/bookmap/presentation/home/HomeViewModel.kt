@@ -175,13 +175,13 @@ class HomeViewModel @Inject constructor(
 
     private fun onClickSearchIcon() {
         if (_uiState.value.searchBook) {
+            if(_uiState.value.searchBookText.isNotEmpty()) { getBooks() }
             _uiState.update {
                 it.copy(
                     searchBook = false,
                     searchBookText = ""
                 )
             }
-            getBooks()
         } else {
             _uiState.update { it.copy(searchBook = true) }
         }

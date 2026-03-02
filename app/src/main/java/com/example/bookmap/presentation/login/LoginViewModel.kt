@@ -62,7 +62,8 @@ class LoginViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _uiState.value = LoginUiState(showError = true)
+                _uiState.update {current ->
+                    current.copy(showError = true, password = EMPTY_STRING) }
             }
         )
     }

@@ -185,9 +185,3 @@ fun LoginScreen(
         }
     }
 }
-
-
-@Preview
-@Composable
-private fun SDsd() {
-}
