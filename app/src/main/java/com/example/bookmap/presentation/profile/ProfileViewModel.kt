@@ -28,7 +28,6 @@ class ProfileViewModel @Inject constructor(
     private val _UiState = MutableStateFlow(ProfileUiState())
     val uiState = _UiState
 
-
     init {
         loadUserData()
     }
@@ -43,25 +42,30 @@ class ProfileViewModel @Inject constructor(
     private fun removeClicked(book: BookDataModel) {
         _UiState.update { state ->
             when (book.isRead) {
-                READING -> state.copy(
-                    readingBooks = state.readingBooks.filter { it.id != book.id }
-                )
+                READING -> {
+                    statusRepository.removeBook(book.id.toString())
+                    state.copy(readingBooks = state.readingBooks.filter { it.id != book.id })
+                }
 
-                READ -> state.copy(
-                    readBooks = state.readBooks.filter { it.id != book.id }
-                )
+                READ -> {
+                    statusRepository.removeBook(book.id.toString())
+                    state.copy(readBooks = state.readBooks.filter { it.id != book.id })
+                }
 
-                UNREAD -> state.copy(
-                    unreadBooks = state.unreadBooks.filter { it.id != book.id }
-                )
+                UNREAD -> {
+                    statusRepository.removeBook(book.id.toString())
+                    state.copy(unreadBooks = state.unreadBooks.filter { it.id != book.id })
+                }
 
-                PAUSED -> state.copy(
-                    pausedBooks = state.pausedBooks.filter { it.id != book.id }
-                )
+                PAUSED -> {
+                    statusRepository.removeBook(book.id.toString())
+                    state.copy(pausedBooks = state.pausedBooks.filter { it.id != book.id })
+                }
 
-                DROPPED -> state.copy(
-                    droppedBooks = state.droppedBooks.filter { it.id != book.id }
-                )
+                DROPPED -> {
+                    statusRepository.removeBook(book.id.toString())
+                    state.copy(droppedBooks = state.droppedBooks.filter { it.id != book.id })
+                }
             }
         }
     }
@@ -103,7 +107,6 @@ class ProfileViewModel @Inject constructor(
             )
         }
     }
-
 
     private fun loadProfileData() {
         viewModelScope.launch {

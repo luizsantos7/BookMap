@@ -3,9 +3,7 @@ package com.example.bookmap.utils.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -25,6 +23,7 @@ import com.example.bookmap.data.models.BookDetailsDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 
 @Composable
+@Suppress("LongMethod")
 fun DetailsDescription(
     book: BookDetailsDataModel,
     modifier: Modifier = Modifier,
@@ -51,7 +50,7 @@ fun DetailsDescription(
         if (book.authors.isNotEmpty()) {
             Text(
                 text = "Autor${if (book.authors.size > 1) "es" else ""}: " +
-                        book.authors.joinToString(", ") { it.name },
+                    book.authors.joinToString(", ") { it.name },
                 style = MaterialTheme.typography.bodySmall.copy(color = Color.LightGray),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
@@ -88,19 +87,22 @@ fun DetailsDescription(
         )
 
         Button(
-            onClick = {navController.popBackStack()},
-            shape = RoundedCornerShape(10.dp),) {
+            onClick = { navController.popBackStack() },
+            shape = RoundedCornerShape(10.dp),
+        ) {
             Text(text = "Voltar")
         }
-
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Text(
-                text = if (book.copyright) "Livro protegido por direitos autorais"
-                else "Domínio público",
+                text = if (book.copyright) {
+                    "Livro protegido por direitos autorais"
+                } else {
+                    "Domínio público"
+                },
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = Color.LightGray
                 ),
@@ -110,7 +112,7 @@ fun DetailsDescription(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF171D23)
+@Preview(showBackground = true)
 @Composable
 private fun DetailsDescriptionPreview() {
     val mockBook = BookDetailsDataModel(
@@ -128,5 +130,4 @@ private fun DetailsDescriptionPreview() {
         copyright = false,
         isRead = ReadStatusDataModel.UNREAD,
     )
-
 }

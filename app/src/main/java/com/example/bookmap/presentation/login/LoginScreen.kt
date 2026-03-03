@@ -32,22 +32,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.bookmap.presentation.login.LoginViewModel.NavigationEvent.ToHomeScreen
-import com.example.bookmap.presentation.login.logindialog.CustomLoginDialog
 import com.example.bookmap.presentation.login.LoginViewModel.NavigationEvent.ToLoginScreen
-import com.example.bookmap.utils.ui.theme.UnfocusField
-import com.example.bookmap.utils.ui.theme.focusFieldBorder
+import com.example.bookmap.presentation.login.logindialog.CustomLoginDialog
 import com.example.bookmap.utils.components.FixedButton
 import com.example.bookmap.utils.components.OutlineTextComponent
 import com.example.bookmap.utils.components.SignUpPrompt
+import com.example.bookmap.utils.constants.THREE_SECONDS
+import com.example.bookmap.utils.ui.theme.UnfocusField
+import com.example.bookmap.utils.ui.theme.focusFieldBorder
 import kotlinx.coroutines.delay
 
 @Composable
+@Suppress("LongMethod")
 fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
@@ -62,7 +63,7 @@ fun LoginScreen(
     LaunchedEffect(uiState.showError) {
         if (uiState.showError) {
             visible = true
-            delay(3000L)
+            delay(THREE_SECONDS)
             viewModel.onDismissError()
             visible = false
         }
@@ -149,7 +150,6 @@ fun LoginScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
                     visualTransformation = PasswordVisualTransformation()
                 )
-
             }
             if (visible) {
                 Text(
@@ -173,21 +173,15 @@ fun LoginScreen(
             )
 
             Spacer(Modifier.height(32.dp))
-            SignUpPrompt(onSignUpClick = { viewModel.callRegisterDialog()})
+            SignUpPrompt(onSignUpClick = { viewModel.callRegisterDialog() })
 
             if (uiState.showRegisterDialog) {
                 CustomLoginDialog(
-                    onDismissAction = {viewModel.dismissRegisterDialog()},
-                    onContinueAction = {viewModel.onActionEvent(LoginScreenAction.SubmitRegister) },
+                    onDismissAction = { viewModel.dismissRegisterDialog() },
+                    onContinueAction = { viewModel.onActionEvent(LoginScreenAction.SubmitRegister) },
                     viewModel = viewModel
                 )
             }
         }
     }
-}
-
-
-@Preview
-@Composable
-private fun SDsd() {
 }

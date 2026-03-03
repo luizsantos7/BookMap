@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.example.bookmap.utils.ui.theme.ErrorBorderColor
 
 @Composable
+@Suppress("LongMethod", "LongParameterList")
 fun OutlineTextComponent(
     modifier: Modifier = Modifier,
     value: String,

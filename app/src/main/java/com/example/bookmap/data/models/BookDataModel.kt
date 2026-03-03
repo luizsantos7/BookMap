@@ -10,5 +10,5 @@ data class BookDataModel(
     val languages: List<String> = emptyList(),
     val coverUrl: String? = null,
     var isRead: ReadStatusDataModel = ReadStatusDataModel.UNREAD,
-    var isFavorited : Boolean = false,
+    var isFavorited: Boolean = false,
 )

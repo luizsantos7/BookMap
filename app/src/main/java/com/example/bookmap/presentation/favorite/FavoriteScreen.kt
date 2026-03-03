@@ -1,6 +1,5 @@
 package com.example.bookmap.presentation.favorite
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,8 +11,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -21,19 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
-import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDataModel
-import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.utils.card.BookCard
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
-
+import com.example.bookmap.utils.ui.theme.BackgroundBlack
 
 @Composable
 fun FavoriteScreen(
@@ -52,6 +47,7 @@ fun FavoriteScreen(
 }
 
 @Composable
+@Suppress("LongMethod")
 private fun FavoritesScreenContent(
     uiState: FavoriteUiState,
     navController: NavController,
@@ -61,9 +57,9 @@ private fun FavoritesScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF171D23))
+            .background(BackgroundBlack)
     ) {
-        NavBarComponent(onClick = {  })
+        NavBarComponent(onClick = { })
 
         when {
             uiState.isLoading -> {
@@ -125,7 +121,7 @@ private fun FavoritesScreenContent(
                             imageCover = book.coverUrl,
                             onFavorited = { onFavorited(book) },
                             isFavorited = book.isFavorited,
-                            onDetails = {navController.navigate("details/${book.id}")}
+                            onDetails = { navController.navigate("details/${book.id}") }
                         )
                     }
                 }

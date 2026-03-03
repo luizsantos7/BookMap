@@ -1,7 +1,6 @@
 package com.example.bookmap.navigation
 
 import androidx.lifecycle.ViewModel
-import androidx.room.Insert
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

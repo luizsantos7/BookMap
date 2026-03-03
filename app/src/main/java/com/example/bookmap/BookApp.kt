@@ -5,7 +5,7 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
-import coil.request.CachePolicy
+import com.example.bookmap.utils.constants.TWENTY_FIVE_PORCENT
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.Dns
 import okhttp3.OkHttpClient
@@ -30,13 +30,12 @@ class BookApp : Application(), ImageLoaderFactory {
             .crossfade(true)
             .memoryCache {
                 MemoryCache.Builder(this)
-                    .maxSizePercent(0.25)
+                    .maxSizePercent(TWENTY_FIVE_PORCENT)
                     .build()
             }
             .diskCache {
                 DiskCache.Builder()
                     .directory(cacheDir.resolve("image_cache"))
-                    .maxSizeBytes(50 * 1024 * 1024)
                     .build()
             }
             .build()

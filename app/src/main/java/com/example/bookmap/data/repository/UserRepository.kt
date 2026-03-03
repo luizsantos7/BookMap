@@ -65,6 +65,4 @@ class UserRepository @Inject constructor(
             }
             .addOnFailureListener { e -> onFailure(e) }
     }
-
-
 }

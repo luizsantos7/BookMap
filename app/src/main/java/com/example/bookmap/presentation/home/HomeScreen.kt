@@ -13,29 +13,43 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterAlt
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.bookmap.data.models.BookDataModel
-import com.example.bookmap.presentation.home.HomeScreenAction.*
+import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
+import com.example.bookmap.presentation.home.HomeScreenAction.NextPage
+import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
+import com.example.bookmap.presentation.home.HomeScreenAction.OnRetry
+import com.example.bookmap.presentation.home.HomeScreenAction.OnSearchABook
 import com.example.bookmap.utils.card.BookCard
+import com.example.bookmap.utils.components.BookStatusRow
 import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
 import com.example.bookmap.utils.components.OutlineTextComponent
-import com.example.bookmap.utils.components.PaginationButtons
+import com.example.bookmap.utils.constants.THREE
+import com.example.bookmap.utils.ui.theme.BackgroundBlack
 import com.example.bookmap.utils.ui.theme.UnfocusField
 import com.example.bookmap.utils.ui.theme.focusFieldBorder
 
@@ -58,11 +72,11 @@ fun HomeScreen(
         onFavorited = { book -> viewModel.onActionEvent(OnFavorited(book)) },
         onRetry = { viewModel.onActionEvent(OnRetry) },
         onNextPage = { viewModel.onActionEvent(NextPage) },
-        onPreviousPage = { viewModel.onActionEvent(BackPage) }
     )
 }
 
 @Composable
+@Suppress("LongMethod", "LongParameterList")
 private fun HomeScreenContent(
     uiState: HomeUiState,
     navController: NavController,
@@ -72,12 +86,11 @@ private fun HomeScreenContent(
     modifier: Modifier = Modifier,
     onFavorited: (BookDataModel) -> Unit,
     onNextPage: () -> Unit = { },
-    onPreviousPage: () -> Unit = { }
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF171D23))
+            .background(BackgroundBlack)
     ) {
         NavBarComponent(
             onClick = onSearchClick,
@@ -92,9 +105,15 @@ private fun HomeScreenContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(start = 16.dp, end = 32.dp, top = 16.dp, bottom = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                Icon(
+                    Icons.Default.FilterAlt,
+                    contentDescription = null,
+                    tint = Color.Gray
+                )
                 OutlineTextComponent(
                     value = uiState.searchBookText,
                     onValueChange = onSearchBook,
@@ -111,6 +130,11 @@ private fun HomeScreenContent(
                         )
                     },
                     modifier = Modifier.fillMaxWidth()
+                )
+                Icon(
+                    Icons.Default.FilterList,
+                    contentDescription = null,
+                    tint = Color.Gray
                 )
             }
         }
@@ -137,7 +161,7 @@ private fun HomeScreenContent(
             uiState.showError -> {
                 ErrorContent(
                     modifier = Modifier.weight(1f),
-                    errorMessage = uiState.errorMessage,
+                    errorMessage = "oiiiiiiii",
                     onRetry = onRetry
                 )
             }
@@ -171,11 +195,53 @@ private fun HomeScreenContent(
             }
 
             else -> {
+                val listState = rememberLazyListState() // estado da lista para controle de rolagem
+
+                LaunchedEffect(listState) {
+                    snapshotFlow {
+                        listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                    } // o snapshotFlow observa um valor do compose e emite em flow sempre que ele muda.
+                        .collect { lastVisibleItemIndex -> // collect coleta o valor resultado pelo snapshotFlow
+                            val totalItems = listState.layoutInfo.totalItemsCount
+
+                            if (lastVisibleItemIndex != null &&
+                                lastVisibleItemIndex >= totalItems - THREE &&
+                                !uiState.isLoading && !uiState.searchBook
+                            ) {
+                                onNextPage()
+                            }
+                        }
+                }
+
                 LazyColumn(
+                    state = listState,
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f),
                 ) {
+                    item {
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 8.dp)
+                        ) {
+                            if (uiState.readingBooks.isNotEmpty()) {
+                                Text(
+                                    text = "Continue Lendo",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color.White,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                                if (!uiState.searchBook) {
+                                    BookStatusRow(
+                                        bookList = uiState.readingBooks,
+                                        modifier = Modifier.fillMaxWidth(),
+                                    )
+                                }
+                            }
+                        }
+                    }
                     items(uiState.filteredBooks) { item ->
                         BookCard(
                             title = item.title,
@@ -186,24 +252,49 @@ private fun HomeScreenContent(
                             onDetails = { navController.navigate("details/${item.id}") }
                         )
                     }
+
+                    if (uiState.listBookNewPageLoading) {
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                CircularProgressIndicator(color = Color.White)
+                                Text("Carregando mais livros...", color = Color.Gray)
+                            }
+                        }
+                    }
                 }
             }
         }
-        AnimatedVisibility(
-            visible = !uiState.searchBook,
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            PaginationButtons(
-                currentPage = uiState.page,
-                onPreviousClick = onPreviousPage,
-                onNextClick = onNextPage
-            )
-        }
+
         Column(
             verticalArrangement = Arrangement.Bottom
         ) {
             Footer(navController = navController)
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeScreenPreview() {
+    val fakeState = HomeUiState(
+        isLoading = false,
+        showError = false,
+        searchBook = true,
+    )
+
+    // simulando o conteudo (sem NavController real)
+    HomeScreenContent(
+        uiState = fakeState,
+        navController = NavController(LocalContext.current), // fake, apenas pra preview
+        onSearchClick = {},
+        onRetry = {},
+        onSearchBook = {},
+        onFavorited = {},
+        onNextPage = {}
+    )
 }

@@ -20,6 +20,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.bookmap.R
+import com.example.bookmap.utils.constants.SEVENTY_TWO
+import com.example.bookmap.utils.ui.theme.Black
 
 @Composable
 fun NavBarComponent(
@@ -30,8 +32,8 @@ fun NavBarComponent(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(72.dp)
-            .background(Color(0xFF15191E))
+            .height(SEVENTY_TWO.dp)
+            .background(Black)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

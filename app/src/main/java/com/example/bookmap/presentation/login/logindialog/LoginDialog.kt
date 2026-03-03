@@ -29,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +46,9 @@ import com.example.bookmap.presentation.login.LoginUiState
 import com.example.bookmap.presentation.login.LoginViewModel
 import com.example.bookmap.utils.components.GenderSelector
 import com.example.bookmap.utils.components.OutlineTextComponent
+import com.example.bookmap.utils.constants.TWO_SECONDS
+import com.example.bookmap.utils.ui.theme.LightGray
+import com.example.bookmap.utils.ui.theme.LightYellow
 import com.example.bookmap.utils.ui.theme.RegisterDialogBackground
 import kotlinx.coroutines.delay
 
@@ -105,6 +107,7 @@ fun CustomLoginDialog(
 }
 
 @Composable
+@Suppress("LongMethod", "LongParameterList")
 fun CustomLoginDialogContent(
     modifier: Modifier = Modifier,
     onDismissAction: () -> Unit,
@@ -124,8 +127,6 @@ fun CustomLoginDialogContent(
     onGeneryChange: (String) -> Unit = {},
     enabled: Boolean = false
 ) {
-    val context = LocalContext.current
-
     Box(
         modifier = modifier
             .background(color = RegisterDialogBackground, shape = RoundedCornerShape(16.dp))
@@ -145,7 +146,7 @@ fun CustomLoginDialogContent(
                         append("Seja bem vindo ao ")
                         withStyle(
                             style = SpanStyle(
-                                color = Color(0xFFD7C9A0),
+                                color = LightYellow,
                                 fontWeight = FontWeight.Bold
                             )
                         ) {
@@ -272,7 +273,7 @@ fun CustomLoginDialogContent(
                 LaunchedEffect(state.errorMessage) {
                     if (state.showError && state.errorMessage.isNotBlank()) {
                         showErrorMessage = true
-                        delay(2000L)
+                        delay(TWO_SECONDS)
                         onDismissAction()
                         showErrorMessage = false
                     }
@@ -323,8 +324,8 @@ fun CustomLoginDialogContent(
                         enabled = enabled,
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFD7C9A0),
-                            contentColor = Color(0xFF2C3E50)
+                            containerColor = LightYellow,
+                            contentColor = LightGray,
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {

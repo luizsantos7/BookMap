@@ -21,20 +21,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.bookmap.data.models.AuthorDataModel
-import com.example.bookmap.data.models.BookDetailsDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.utils.components.DetailsDescription
 import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
+import com.example.bookmap.utils.ui.theme.BackgroundBlack
+import com.example.bookmap.utils.ui.theme.BackgroundGrayConstrast
 
 @Composable
 fun DetailScreen(
@@ -57,19 +55,19 @@ fun DetailScreen(
 }
 
 @Composable
+@Suppress("LongMethod")
 private fun DetailScreenContent(
     uiState: DetailUiState,
     navController: NavController,
     modifier: Modifier = Modifier,
     onStatusChange: (ReadStatusDataModel) -> Unit
 ) {
-
     val book = uiState.book
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF171D23))
+            .background(BackgroundBlack)
     ) {
         NavBarComponent()
 
@@ -114,8 +112,8 @@ private fun DetailScreenContent(
                                 .background(
                                     brush = Brush.verticalGradient(
                                         colors = listOf(
-                                            Color(0xFF3D3D3D),
-                                            Color(0xFF171D23)
+                                            BackgroundGrayConstrast,
+                                            BackgroundBlack
                                         ),
                                         startY = 0f,
                                         endY = Float.POSITIVE_INFINITY
@@ -136,7 +134,6 @@ private fun DetailScreenContent(
                         }
                     }
 
-
                     item {
                         DetailsDescription(
                             book = book,
@@ -144,9 +141,7 @@ private fun DetailScreenContent(
                             onStatusChange = onStatusChange
                         )
                     }
-
                 }
-
             }
         }
         Column(verticalArrangement = Arrangement.Bottom) {
@@ -154,5 +149,3 @@ private fun DetailScreenContent(
         }
     }
 }
-
-

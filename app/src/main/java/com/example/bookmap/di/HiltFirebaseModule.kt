@@ -16,5 +16,4 @@ object HiltFirebaseModule {
 
     @Provides
     fun provideFirebaseFirestore() = FirebaseFirestore.getInstance()
-
 }

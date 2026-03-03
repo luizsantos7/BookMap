@@ -42,6 +42,8 @@ import com.example.bookmap.utils.components.BookStatusRow
 import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
+import com.example.bookmap.utils.ui.theme.BackgroundBlack
+import com.example.bookmap.utils.ui.theme.Beige
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -56,24 +58,22 @@ fun ProfileScreen(
         uiState = uiState,
         navController = navController,
         modifier = modifier,
-        removeBookClick =  { book -> viewModel.onActionEvent(removeBook(book)) }
+        removeBookClick = { book -> viewModel.onActionEvent(removeBook(book)) }
     )
 
     LaunchedEffect(Unit) {
         viewModel.onActionEvent(LoadProfileData)
     }
-
-
 }
 
 @Composable
+@Suppress("LongMethod")
 private fun ProfileScreenContent(
     uiState: ProfileUiState,
     navController: NavController,
     modifier: Modifier = Modifier,
-    removeBookClick : (BookDataModel) -> Unit = { }
+    removeBookClick: (BookDataModel) -> Unit = { }
 ) {
-
     val readingBooks = uiState.readingBooks
     val readBooks = uiState.readBooks
     val unreadBooks = uiState.unreadBooks
@@ -83,7 +83,7 @@ private fun ProfileScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF171D23))
+            .background(BackgroundBlack)
     ) {
         NavBarComponent()
 
@@ -162,7 +162,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = readingBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -182,7 +183,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = readBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -202,7 +204,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = unreadBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -222,7 +225,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = pausedBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -242,7 +246,8 @@ private fun ProfileScreenContent(
                                 BookStatusRow(
                                     bookList = droppedBooks,
                                     modifier = Modifier.fillMaxWidth(),
-                                    removeBookClick = removeBookClick
+                                    removeBookClick = removeBookClick,
+                                    clickable = true
                                 )
                             }
                         }
@@ -262,7 +267,7 @@ private fun ProfileScreenContent(
                                 .padding(horizontal = 95.dp, vertical = 15.dp),
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFA19C7D),
+                                containerColor = Beige,
                                 contentColor = Color.White
                             )
                         ) {
@@ -280,10 +285,9 @@ private fun ProfileScreenContent(
     }
 }
 
-
-
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
+@Suppress("LongMethod")
 fun ProfileScreenPreview_Fake() {
     val fakeUser = UserRegisterDataModel(
         email = "ana.leitora@email.com",
@@ -334,7 +338,6 @@ fun ProfileScreenPreview_Fake() {
         ),
         coverUrl = "https://example.com/domcasmurro.jpg"
     )
-
 
     val fakeUiState = ProfileUiState(
         isLoading = false,

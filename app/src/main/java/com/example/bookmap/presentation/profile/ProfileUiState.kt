@@ -7,7 +7,7 @@ data class ProfileUiState(
     val isLoading: Boolean = false,
     val showError: Boolean = false,
     val errorMessage: String = "",
-    val user : UserRegisterDataModel = UserRegisterDataModel(),
+    val user: UserRegisterDataModel = UserRegisterDataModel(),
     val readingBooks: List<BookDataModel> = emptyList(),
     val readBooks: List<BookDataModel> = emptyList(),
     val unreadBooks: List<BookDataModel> = emptyList(),
