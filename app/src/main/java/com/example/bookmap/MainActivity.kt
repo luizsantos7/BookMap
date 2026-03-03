@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             BookMapTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     AppNavHost(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding) //teste
                     )
                 }
             }
