@@ -13,6 +13,7 @@ import com.example.bookmap.presentation.home.HomeScreenAction.NextPage
 import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
 import com.example.bookmap.presentation.home.HomeScreenAction.OnRetry
 import com.example.bookmap.presentation.home.HomeScreenAction.OnSearchABook
+import com.example.bookmap.utils.constants.FIVE_MILISECONDS
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -73,7 +74,8 @@ class HomeViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    readingBooks = books.filter { it.isRead == ReadStatusDataModel.READING })
+                    readingBooks = books.filter { it.isRead == ReadStatusDataModel.READING }
+                )
             }
             val favorites = favoriteRepository.getFavoriteBooks()
             val favoriteIds = favorites.map { it.id }.toSet()
@@ -149,7 +151,6 @@ class HomeViewModel @Inject constructor(
                     if (books.isEmpty()) {
                         _uiState.update { it.copy(isLoading = false, isContinue = false) }
                     } else {
-
                         _uiState.update {
                             it.copy(
                                 isLoading = false,
@@ -172,10 +173,9 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
     private fun onClickSearchIcon() {
         if (_uiState.value.searchBook) {
-            if(_uiState.value.searchBookText.isNotEmpty()) { getBooks() }
+            if (_uiState.value.searchBookText.isNotEmpty()) { getBooks() }
             _uiState.update {
                 it.copy(
                     searchBook = false,
@@ -191,7 +191,7 @@ class HomeViewModel @Inject constructor(
         _uiState.update { it.copy(searchBookText = bookName) }
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(500)
+            delay(FIVE_MILISECONDS)
             onGetBookByName()
         }
     }

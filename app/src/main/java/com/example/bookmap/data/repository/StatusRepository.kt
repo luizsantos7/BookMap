@@ -2,7 +2,6 @@ package com.example.bookmap.data.repository
 
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.models.BookDetailsDataModel
-import com.example.bookmap.data.models.ReadStatusDataModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await

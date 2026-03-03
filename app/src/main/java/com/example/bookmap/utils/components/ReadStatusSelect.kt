@@ -29,8 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bookmap.data.models.ReadStatusDataModel
+import com.example.bookmap.utils.ui.theme.BackgroundBlack
+import com.example.bookmap.utils.ui.theme.BlackDropped
+import com.example.bookmap.utils.ui.theme.BlackGray
+import com.example.bookmap.utils.ui.theme.Blue
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Suppress("LongMethod")
 @Composable
 fun ReadStatusSelector(
     currentStatus: ReadStatusDataModel,
@@ -40,13 +45,13 @@ fun ReadStatusSelector(
     var expanded by remember { mutableStateOf(false) }
     val options = ReadStatusDataModel.values()
 
-    val backgroundColor = Color(0xFF171D23) // 0xFF2D333B
-    val borderColor = Color(0xFF2D333B) // 0xFF444C56
+    val backgroundColor = BackgroundBlack
+    val borderColor = BlackGray
     val textColor = Color.LightGray
     val labelColor = Color.Gray
-    val dropdownBackground = Color(0xFF22272E)
-    val selectedItemColor = Color(0xFF539BF5)
-    val hoverColor = Color(0xFF373E47)
+    val dropdownBackground = BlackDropped
+    val selectedItemColor = Blue
+    val hoverColor = BlackGray
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -123,13 +128,17 @@ fun ReadStatusSelector(
                                 ReadStatusDataModel.PAUSED -> "Pausado"
                                 ReadStatusDataModel.DROPPED -> "Desistido"
                             },
-                            color = if (status == currentStatus)
+                            color = if (status == currentStatus) {
                                 selectedItemColor
-                            else textColor,
+                            } else {
+                                textColor
+                            },
                             fontSize = 14.sp,
-                            fontWeight = if (status == currentStatus)
+                            fontWeight = if (status == currentStatus) {
                                 FontWeight.SemiBold
-                            else FontWeight.Normal
+                            } else {
+                                FontWeight.Normal
+                            }
                         )
                     },
                     onClick = {
@@ -145,9 +154,11 @@ fun ReadStatusSelector(
                         disabledTrailingIconColor = labelColor
                     ),
                     modifier = Modifier.background(
-                        if (status == currentStatus)
+                        if (status == currentStatus) {
                             hoverColor
-                        else Color.Transparent
+                        } else {
+                            Color.Transparent
+                        }
                     )
                 )
             }
@@ -155,17 +166,16 @@ fun ReadStatusSelector(
     }
 }
 
-@Preview(showBackground = true, backgroundColor = 0xFF0D1117)
+@Preview(showBackground = true)
 @Composable
 fun ReadStatusSelectorPreview() {
     var currentStatus by remember { mutableStateOf(ReadStatusDataModel.READING) }
 
     Column(
         modifier = Modifier
-            .background(Color(0xFF0D1117))
+            .background(BlackDropped)
             .padding(16.dp)
     ) {
-        // Preview com status "Lendo"
         ReadStatusSelector(
             currentStatus = currentStatus,
             onStatusChanged = { currentStatus = it },
@@ -174,7 +184,6 @@ fun ReadStatusSelectorPreview() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Preview com status "Não lido"
         ReadStatusSelector(
             currentStatus = ReadStatusDataModel.UNREAD,
             onStatusChanged = {},
@@ -183,7 +192,6 @@ fun ReadStatusSelectorPreview() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Preview com status "Lido"
         ReadStatusSelector(
             currentStatus = ReadStatusDataModel.READ,
             onStatusChanged = {},
@@ -197,7 +205,7 @@ fun ReadStatusSelectorPreview() {
 fun ReadStatusSelectorDarkPreview() {
     Column(
         modifier = Modifier
-            .background(Color(0xFF0D1117))
+            .background(BlackDropped)
             .padding(24.dp)
     ) {
         Text(

@@ -36,8 +36,10 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.utils.constants.EMPTY_STRING
+import com.example.bookmap.utils.ui.theme.Black
 
 @Composable
+@Suppress("LongParameterList", "LongMethod")
 fun BookCard(
     title: String = "Book Title",
     author: List<AuthorDataModel> = listOf(),
@@ -53,7 +55,7 @@ fun BookCard(
             .height(175.dp)
             .padding(horizontal = 12.dp, vertical = 6.dp)
             .clickable(onClick = onDetails),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF15191E)),
+        colors = CardDefaults.cardColors(containerColor = Black),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

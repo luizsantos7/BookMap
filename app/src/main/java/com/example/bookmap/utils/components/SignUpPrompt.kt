@@ -7,16 +7,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import com.example.bookmap.utils.ui.theme.Blue
 
 @Composable
 fun SignUpPrompt(onSignUpClick: () -> Unit) {
     Row {
         Text(
             text = "Não tem uma conta? ",
-            color = Color.White, )
+            color = Color.White,
+        )
         Text(
             text = "Cadastre-se",
-            color = Color(0xFF3B82F6), // Azul semelhante ao do exemplo
+            color = Blue,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.clickable { onSignUpClick() }
         )

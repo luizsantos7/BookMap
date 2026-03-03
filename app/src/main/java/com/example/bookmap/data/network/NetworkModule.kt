@@ -1,6 +1,7 @@
 package com.example.bookmap.data.network
 
 import com.example.bookmap.data.api.BookApi
+import com.example.bookmap.utils.constants.SIXTY_SECONDS
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -60,9 +61,9 @@ object NetworkModule {
             .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
             .hostnameVerifier { _, _ -> true }
             .addInterceptor(loggingInterceptor)
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(SIXTY_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(SIXTY_SECONDS, TimeUnit.SECONDS)
+            .writeTimeout(SIXTY_SECONDS, TimeUnit.SECONDS)
             .build()
     }
 

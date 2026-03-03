@@ -16,7 +16,13 @@ import com.example.bookmap.presentation.login.LoginScreenAction.RegisterPassword
 import com.example.bookmap.presentation.login.LoginScreenAction.SubmitLogin
 import com.example.bookmap.presentation.login.LoginScreenAction.SubmitRegister
 import com.example.bookmap.presentation.login.LoginScreenAction.newRegister
+import com.example.bookmap.utils.constants.EIGHT
 import com.example.bookmap.utils.constants.EMPTY_STRING
+import com.example.bookmap.utils.constants.FIVE
+import com.example.bookmap.utils.constants.FOUR
+import com.example.bookmap.utils.constants.SIX
+import com.example.bookmap.utils.constants.THREE
+import com.example.bookmap.utils.constants.TWO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,7 +57,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    //Login functions
+    // Login functions
     fun onSubmitLogin(email: String, password: String) {
         userRepository.loginUser(
             email,
@@ -62,15 +68,16 @@ class LoginViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _uiState.update {current ->
-                    current.copy(showError = true, password = EMPTY_STRING) }
+                _uiState.update { current ->
+                    current.copy(showError = true, password = EMPTY_STRING)
+                }
             }
         )
     }
 
     fun enableLoginButton(): Boolean {
         val password = _uiState.value.password
-        return password.isNotEmpty() && password.isNotEmpty() && password.length >= 6
+        return password.isNotEmpty() && password.isNotEmpty() && password.length >= SIX
     }
 
     fun onDismissError() {
@@ -94,7 +101,7 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(showRegisterDialog = false) }
     }
 
-    //REGISTER FUNCTIONS
+    // REGISTER FUNCTIONS
     private fun validateEmails(email: String, confirmEmail: String): Boolean {
         return when {
             email.isBlank() || confirmEmail.isBlank() -> {
@@ -135,7 +142,7 @@ class LoginViewModel @Inject constructor(
             }
             return
         }
-        val user : UserRegisterDataModel = with(_uiState.value.userRegister) {
+        val user: UserRegisterDataModel = with(_uiState.value.userRegister) {
             UserRegisterDataModel(
                 email = email,
                 confirmEmail = confirmEmail,
@@ -172,13 +179,13 @@ class LoginViewModel @Inject constructor(
         val user = _uiState.value.userRegister
 
         return user.name.isNotBlank() &&
-                user.email.isNotBlank() &&
-                user.confirmEmail.isNotBlank() &&
-                user.password.isNotBlank() &&
-                user.birthday.isNotBlank() &&
-                user.gender.isNotBlank() &&
-                user.confirmEmail == user.email &&
-                user.password.length >= 6
+            user.email.isNotBlank() &&
+            user.confirmEmail.isNotBlank() &&
+            user.password.isNotBlank() &&
+            user.birthday.isNotBlank() &&
+            user.gender.isNotBlank() &&
+            user.confirmEmail == user.email &&
+            user.password.length >= SIX
     }
 
     fun onNameRegisterChange(name: String) {
@@ -200,17 +207,17 @@ class LoginViewModel @Inject constructor(
     fun onBirthdayRegisterChange(input: String) {
         val digits = input.filter { it.isDigit() }
 
-        val limited = digits.take(8)
+        val limited = digits.take(EIGHT)
 
         val formatted = when {
-            limited.length >= 5 -> "${limited.substring(0, 2)}/${
+            limited.length >= FIVE -> "${limited.substring(0, 2)}/${
                 limited.substring(
-                    2,
-                    4
+                    TWO,
+                    FOUR
                 )
-            }/${limited.substring(4)}"
+            }/${limited.substring(FOUR)}"
 
-            limited.length >= 3 -> "${limited.substring(0, 2)}/${limited.substring(2)}"
+            limited.length >= THREE -> "${limited.substring(0, 2)}/${limited.substring(2)}"
             limited.isNotEmpty() -> limited
             else -> ""
         }

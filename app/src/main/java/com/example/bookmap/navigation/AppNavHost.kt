@@ -1,6 +1,5 @@
 package com.example.bookmap.navigation
 
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -12,7 +11,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bookmap.presentation.details.DetailScreen
 import com.example.bookmap.presentation.favorite.FavoriteScreen
-import com.example.bookmap.presentation.filter.FilterDialog
 import com.example.bookmap.presentation.home.HomeScreen
 import com.example.bookmap.presentation.login.LoginScreen
 import com.example.bookmap.presentation.profile.ProfileScreen
@@ -27,7 +25,7 @@ fun AppNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = "filter_screen",
+        startDestination = state.startDestination,
     ) {
         composable("login_screen") {
             LoginScreen(
@@ -60,6 +58,5 @@ fun AppNavHost(
                 navController = navController
             )
         }
-
     }
 }

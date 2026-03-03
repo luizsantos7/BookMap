@@ -48,6 +48,8 @@ import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
 import com.example.bookmap.utils.components.OutlineTextComponent
+import com.example.bookmap.utils.constants.THREE
+import com.example.bookmap.utils.ui.theme.BackgroundBlack
 import com.example.bookmap.utils.ui.theme.UnfocusField
 import com.example.bookmap.utils.ui.theme.focusFieldBorder
 
@@ -74,6 +76,7 @@ fun HomeScreen(
 }
 
 @Composable
+@Suppress("LongMethod", "LongParameterList")
 private fun HomeScreenContent(
     uiState: HomeUiState,
     navController: NavController,
@@ -87,7 +90,7 @@ private fun HomeScreenContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF171D23))
+            .background(BackgroundBlack)
     ) {
         NavBarComponent(
             onClick = onSearchClick,
@@ -195,12 +198,14 @@ private fun HomeScreenContent(
                 val listState = rememberLazyListState() // estado da lista para controle de rolagem
 
                 LaunchedEffect(listState) {
-                    snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index } // o snapshotFlow observa um valor do compose e emite em flow sempre que ele muda.
-                        .collect { lastVisibleItemIndex -> //collect coleta o valor resultado pelo snapshotFlow
+                    snapshotFlow {
+                        listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                    } // o snapshotFlow observa um valor do compose e emite em flow sempre que ele muda.
+                        .collect { lastVisibleItemIndex -> // collect coleta o valor resultado pelo snapshotFlow
                             val totalItems = listState.layoutInfo.totalItemsCount
 
                             if (lastVisibleItemIndex != null &&
-                                lastVisibleItemIndex >= totalItems - 3 &&
+                                lastVisibleItemIndex >= totalItems - THREE &&
                                 !uiState.isLoading && !uiState.searchBook
                             ) {
                                 onNextPage()
@@ -234,7 +239,6 @@ private fun HomeScreenContent(
                                         modifier = Modifier.fillMaxWidth(),
                                     )
                                 }
-
                             }
                         }
                     }
@@ -277,8 +281,6 @@ private fun HomeScreenContent(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-
-
     val fakeState = HomeUiState(
         isLoading = false,
         showError = false,

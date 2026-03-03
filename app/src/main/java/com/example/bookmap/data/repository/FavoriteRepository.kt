@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.collections.mapOf
 
 class FavoriteRepository @Inject constructor(
     auth: FirebaseAuth,
@@ -41,14 +40,14 @@ class FavoriteRepository @Inject constructor(
             }
     }
 
-     fun addFavorite(book: BookDataModel) {
+    fun addFavorite(book: BookDataModel) {
         favoritesCollection
             .document(book.id.toString())
             .set(book)
         book.isFavorited = true
     }
 
-     fun removeFavorite(book: BookDataModel) {
+    fun removeFavorite(book: BookDataModel) {
         favoritesCollection.document(book.id.toString()).delete()
         book.isFavorited = false
     }

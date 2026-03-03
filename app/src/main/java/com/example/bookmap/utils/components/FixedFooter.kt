@@ -11,32 +11,29 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PersonOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.bookmap.utils.ui.theme.Black
 
 @Composable
+@Suppress("LongMethod")
 fun Footer(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(height = 72.dp)
-            .background(Color(0xFF15191E))
+            .background(Black)
             .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
@@ -92,10 +89,4 @@ fun Footer(
             )
         }
     }
-
-}
-
-@Preview
-@Composable
-private fun FooterPreview() {
 }

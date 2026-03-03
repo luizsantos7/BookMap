@@ -1,17 +1,18 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
     kotlin("plugin.serialization")
+    id("io.gitlab.arturbosch.detekt")
     alias(libs.plugins.google.gms.google.services)
 }
 
 android {
     namespace = "com.example.bookmap"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.bookmap"
@@ -32,16 +33,36 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
     }
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
+
+// Configuração do Detekt FORA do bloco android
+        tasks.withType<Detekt>().configureEach {
+            jvmTarget = "11"
+
+            reports {
+                html.required.set(true)
+                xml.required.set(true)
+                txt.required.set(true)
+            }
+        }
+
 dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.23.6")
+
     implementation("com.google.dagger:hilt-android:2.59")
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)

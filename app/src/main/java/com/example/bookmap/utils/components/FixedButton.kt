@@ -14,29 +14,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.bookmap.utils.ui.theme.PrimaryButtonLogin
+import com.example.bookmap.utils.ui.theme.Cyan
 
 @Composable
+@Suppress("LongMethod", "LongParameterList")
 fun FixedButton(
     modifier: Modifier = Modifier,
     primaryButtonText: String = "Primary",
     secundaryButtonText: String? = null,
     primaryClickButton: () -> Unit = {},
     secundaryClickButton: () -> Unit = {},
-    primaryButtonColor: Color = PrimaryButtonLogin,
+    primaryButtonColor: Color = Cyan,
     secondaryButtonColor: Color = Color.Gray,
     primaryTextColor: Color = Color.White,
     secondaryTextColor: Color = Color.White,
-    enabled : Boolean = true,
+    enabled: Boolean = true,
 ) {
     val hasSecondary = secundaryButtonText.isNullOrEmpty()
 
     if (!hasSecondary) {
         Column(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .height(128.dp),
+            modifier
+                .fillMaxWidth()
+                .height(128.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -65,15 +66,15 @@ fun FixedButton(
     } else {
         Column(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .height(128.dp),
+            modifier
+                .fillMaxWidth()
+                .height(128.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(
                 onClick = {},
-                enabled =enabled,
+                enabled = enabled,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),

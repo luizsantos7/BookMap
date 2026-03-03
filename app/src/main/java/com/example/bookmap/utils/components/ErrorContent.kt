@@ -7,10 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.bookmap.utils.ui.theme.Cyan
+import com.example.bookmap.utils.ui.theme.Gray
+import com.example.bookmap.utils.ui.theme.Red
 
 @Composable
 fun ErrorContent(
@@ -39,13 +41,13 @@ fun ErrorContent(
         Icon(
             imageVector = Icons.Default.ErrorOutline,
             contentDescription = "Erro",
-            tint = Color(0xFFC2413F),
+            tint = Red,
             modifier = Modifier.size(64.dp)
         )
 
         Text(
             text = "Ops! Algo deu errado",
-            color = Color(0xFFFAF7F5),
+            color = Color.White,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 16.dp)
@@ -53,7 +55,7 @@ fun ErrorContent(
 
         Text(
             text = errorMessage.ifEmpty { "Não foi possível carregar os livros" },
-            color = Color(0xFF96968E),
+            color = Gray,
             fontSize = 14.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
@@ -61,8 +63,8 @@ fun ErrorContent(
 
         Button(
             onClick = onRetry,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF496D78)
+            colors = buttonColors(
+                containerColor = Cyan
             ),
             shape = RoundedCornerShape(8.dp)
         ) {

@@ -8,16 +8,19 @@ import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.data.repository.StatusRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
 import io.mockk.verify
-import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Before
-import org.junit.Test
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
 
 class DetailViewModelTest {
 

@@ -28,7 +28,6 @@ class ProfileViewModel @Inject constructor(
     private val _UiState = MutableStateFlow(ProfileUiState())
     val uiState = _UiState
 
-
     init {
         loadUserData()
     }
@@ -108,7 +107,6 @@ class ProfileViewModel @Inject constructor(
             )
         }
     }
-
 
     private fun loadProfileData() {
         viewModelScope.launch {
