@@ -1,22 +1,19 @@
 package com.example.bookmap.presentation.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterAlt
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -47,11 +44,8 @@ import com.example.bookmap.utils.components.BookStatusRow
 import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
-import com.example.bookmap.utils.components.OutlineTextComponent
 import com.example.bookmap.utils.constants.THREE
 import com.example.bookmap.utils.ui.theme.BackgroundBlack
-import com.example.bookmap.utils.ui.theme.UnfocusField
-import com.example.bookmap.utils.ui.theme.focusFieldBorder
 
 @Composable
 fun HomeScreen(
@@ -94,50 +88,10 @@ private fun HomeScreenContent(
     ) {
         NavBarComponent(
             onClick = onSearchClick,
-            visibleSearch = true
+            isSearchIconVisible = true,
+            onValueChange = onSearchBook,
+            value = uiState.searchBookText,
         )
-
-        AnimatedVisibility(
-            visible = uiState.searchBook,
-            enter = expandVertically(),
-            exit = shrinkVertically()
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 32.dp, top = 16.dp, bottom = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Icon(
-                    Icons.Default.FilterAlt,
-                    contentDescription = null,
-                    tint = Color.Gray
-                )
-                OutlineTextComponent(
-                    value = uiState.searchBookText,
-                    onValueChange = onSearchBook,
-                    textColor = Color.Gray,
-                    backgroundColor = UnfocusField,
-                    focusedBorderColor = focusFieldBorder,
-                    unfocusedBorderColor = UnfocusField,
-                    placeholder = "Buscar livros, autores...",
-                    leadingIcon = {
-                        Icon(
-                            Icons.Default.Search,
-                            contentDescription = null,
-                            tint = Color.Gray
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Icon(
-                    Icons.Default.FilterList,
-                    contentDescription = null,
-                    tint = Color.Gray
-                )
-            }
-        }
 
         when {
             uiState.isLoading -> {
@@ -225,7 +179,8 @@ private fun HomeScreenContent(
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp, vertical = 8.dp)
                         ) {
-                            if (uiState.readingBooks.isNotEmpty()) {
+                            val visibility = uiState.readingBooks.isNotEmpty() and !uiState.searchBook
+                            AnimatedVisibility(visible = visibility) {
                                 Text(
                                     text = "Continue Lendo",
                                     style = MaterialTheme.typography.titleMedium,
@@ -233,13 +188,13 @@ private fun HomeScreenContent(
                                     color = Color.White,
                                     modifier = Modifier.padding(horizontal = 16.dp)
                                 )
-                                if (!uiState.searchBook) {
-                                    BookStatusRow(
-                                        bookList = uiState.readingBooks,
-                                        modifier = Modifier.fillMaxWidth(),
-                                    )
-                                }
+                                Spacer(Modifier.height(8.dp))
+                                BookStatusRow(
+                                    bookList = uiState.readingBooks,
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
                             }
+
                         }
                     }
                     items(uiState.filteredBooks) { item ->
@@ -287,10 +242,9 @@ fun HomeScreenPreview() {
         searchBook = true,
     )
 
-    // simulando o conteudo (sem NavController real)
     HomeScreenContent(
         uiState = fakeState,
-        navController = NavController(LocalContext.current), // fake, apenas pra preview
+        navController = NavController(LocalContext.current),
         onSearchClick = {},
         onRetry = {},
         onSearchBook = {},

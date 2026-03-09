@@ -2,36 +2,13 @@ package com.example.bookmap.data.repository
 
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.models.BookDetailsDataModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
+import com.google.firebase.firestore.CollectionReference
 
-class StatusRepository @Inject constructor(
-    auth: FirebaseAuth,
-    firestore: FirebaseFirestore
-) {
-    private val userId =
-        auth.currentUser?.uid ?: throw IllegalStateException("User not authenticated")
-    private val booksCollection =
-        firestore.collection("users").document(userId).collection("books")
+interface StatusRepository {
+    val userId: String
+    val booksCollection: CollectionReference
+    fun addBook(book: BookDetailsDataModel)
+    fun removeBook(bookId: String)
 
-    fun addBook(book: BookDetailsDataModel) {
-        booksCollection
-            .document(book.id.toString())
-            .set(book)
-    }
-
-    fun removeBook(bookId: String) {
-        booksCollection
-            .document(bookId)
-            .delete()
-    }
-
-    suspend fun getBooks(): List<BookDataModel> {
-        val snapshot = booksCollection
-            .get()
-            .await()
-        return snapshot.toObjects(BookDataModel::class.java)
-    }
+    suspend fun getBooks(): List<BookDataModel>
 }

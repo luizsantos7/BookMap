@@ -49,7 +49,6 @@ kotlin {
 }
 
 
-// Configuração do Detekt FORA do bloco android
         tasks.withType<Detekt>().configureEach {
             jvmTarget = "11"
 
