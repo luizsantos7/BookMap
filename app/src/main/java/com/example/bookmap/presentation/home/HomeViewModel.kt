@@ -6,7 +6,7 @@ import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
 import com.example.bookmap.data.repository.BookRepository
 import com.example.bookmap.data.repository.FavoriteRepository
-import com.example.bookmap.data.repository.StatusRepository
+import com.example.bookmap.data.repository.StatusRepositoryImpl
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
 import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
 import com.example.bookmap.presentation.home.HomeScreenAction.NextPage
@@ -24,10 +24,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
+
 class HomeViewModel @Inject constructor(
     val bookRepository: BookRepository,
     val favoriteRepository: FavoriteRepository,
-    val statusRepository: StatusRepository,
+    val statusRepositoryImpl: StatusRepositoryImpl,
     private val auth: FirebaseAuth
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -70,7 +71,7 @@ class HomeViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true, showError = false, isContinue = false) }
 
         viewModelScope.launch {
-            val books = statusRepository.getBooks()
+            val books = statusRepositoryImpl.getBooks()
 
             _uiState.update {
                 it.copy(

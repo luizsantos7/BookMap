@@ -4,8 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.models.ReadStatusDataModel
-import com.example.bookmap.data.repository.BookRepository
+import com.example.bookmap.data.repository.BookRepositoryImpl
 import com.example.bookmap.data.repository.StatusRepository
+import com.example.bookmap.data.repository.StatusRepositoryImpl
 import com.example.bookmap.presentation.details.DetailScreenAction.LoadBookDetails
 import com.example.bookmap.presentation.details.DetailScreenAction.OnStatusChange
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    val bookRepository: BookRepository,
+    val bookRepositoryImpl: BookRepositoryImpl,
     val statusRepository: StatusRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -41,7 +42,7 @@ class DetailViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true, isContinue = false, showError = false) }
 
         viewModelScope.launch {
-            bookRepository.buscarLivroPorId(bookId)
+            bookRepositoryImpl.buscarLivroPorId(bookId)
                 .onSuccess { bookDetails ->
                     _uiState.update {
                         it.copy(

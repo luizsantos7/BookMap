@@ -7,13 +7,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-@Module
-@InstallIn(SingletonComponent::class)
+@Module // O modulo é a classe que instrui o hilt a criar objetos
+@InstallIn(SingletonComponent::class) // decide que ciclo de vida do objeto é parelho ao ciclo de vida do app, quando o app fecha ele é encerrado
 object HiltFirebaseModule {
 
-    @Provides
+    @Provides // providencia o objeto externo necessario
     fun provideFirebaseAuth() = FirebaseAuth.getInstance()
 
-    @Provides
+    @Provides // providencia o objeto externo necessario
     fun provideFirebaseFirestore() = FirebaseFirestore.getInstance()
 }

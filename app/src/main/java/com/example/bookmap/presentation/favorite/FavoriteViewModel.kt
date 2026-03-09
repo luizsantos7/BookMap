@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.data.repository.FavoriteRepository
+import com.example.bookmap.data.repository.FavoriteRepositoryImpl
 import com.example.bookmap.presentation.favorite.FavoriteScreenAction.OnRemoveFromFavorite
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

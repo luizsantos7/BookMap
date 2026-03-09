@@ -4,8 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.bookmap.data.models.AuthorDataModel
 import com.example.bookmap.data.models.BookDetailsDataModel
 import com.example.bookmap.data.models.ReadStatusDataModel
-import com.example.bookmap.data.repository.BookRepository
-import com.example.bookmap.data.repository.StatusRepository
+import com.example.bookmap.data.repository.BookRepositoryImpl
+import com.example.bookmap.data.repository.StatusRepositoryImpl
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -25,10 +25,10 @@ import org.junit.Test
 class DetailViewModelTest {
 
     @MockK
-    lateinit var bookRepository: BookRepository
+    lateinit var bookRepositoryImpl: BookRepositoryImpl
 
     @MockK
-    lateinit var statusRepository: StatusRepository
+    lateinit var statusRepositoryImpl: StatusRepositoryImpl
 
     @Before
     fun setUp() {
@@ -57,10 +57,10 @@ class DetailViewModelTest {
             isRead = ReadStatusDataModel.UNREAD
         )
 
-        coEvery { bookRepository.buscarLivroPorId("1") } returns Result.success(book)
+        coEvery { bookRepositoryImpl.buscarLivroPorId("1") } returns Result.success(book)
 
         val savedState = SavedStateHandle(mapOf("bookId" to "1"))
-        val vm = DetailViewModel(bookRepository, statusRepository, savedState)
+        val vm = DetailViewModel(bookRepositoryImpl, statusRepositoryImpl, savedState)
 
         testDispatcher.scheduler.advanceUntilIdle()
 
@@ -74,10 +74,10 @@ class DetailViewModelTest {
         val testDispatcher = StandardTestDispatcher(testScheduler)
         Dispatchers.setMain(testDispatcher)
 
-        coEvery { bookRepository.buscarLivroPorId("1") } returns Result.failure(Exception("fail"))
+        coEvery { bookRepositoryImpl.buscarLivroPorId("1") } returns Result.failure(Exception("fail"))
 
         val savedState = SavedStateHandle(mapOf("bookId" to "1"))
-        val vm = DetailViewModel(bookRepository, statusRepository, savedState)
+        val vm = DetailViewModel(bookRepositoryImpl, statusRepositoryImpl, savedState)
 
         testDispatcher.scheduler.advanceUntilIdle()
 
@@ -101,17 +101,17 @@ class DetailViewModelTest {
             isRead = ReadStatusDataModel.UNREAD
         )
 
-        coEvery { bookRepository.buscarLivroPorId("1") } returns Result.success(book)
+        coEvery { bookRepositoryImpl.buscarLivroPorId("1") } returns Result.success(book)
 
         val savedState = SavedStateHandle(mapOf("bookId" to "1"))
-        val vm = DetailViewModel(bookRepository, statusRepository, savedState)
+        val vm = DetailViewModel(bookRepositoryImpl, statusRepositoryImpl, savedState)
 
         testDispatcher.scheduler.advanceUntilIdle()
 
         vm.onActionEvent(DetailScreenAction.OnStatusChange(ReadStatusDataModel.READ))
 
-        verify { statusRepository.removeBook("1") }
-        verify { statusRepository.addBook(match { it.id == 1L && it.isRead == ReadStatusDataModel.READ }) }
+        verify { statusRepositoryImpl.removeBook("1") }
+        verify { statusRepositoryImpl.addBook(match { it.id == 1L && it.isRead == ReadStatusDataModel.READ }) }
 
         assertEquals(ReadStatusDataModel.READ, vm.uiState.value.book.isRead)
     }

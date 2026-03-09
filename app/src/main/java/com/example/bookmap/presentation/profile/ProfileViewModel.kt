@@ -8,8 +8,8 @@ import com.example.bookmap.data.models.ReadStatusDataModel.PAUSED
 import com.example.bookmap.data.models.ReadStatusDataModel.READ
 import com.example.bookmap.data.models.ReadStatusDataModel.READING
 import com.example.bookmap.data.models.ReadStatusDataModel.UNREAD
-import com.example.bookmap.data.repository.StatusRepository
-import com.example.bookmap.data.repository.UserRepository
+import com.example.bookmap.data.repository.StatusRepositoryImpl
+import com.example.bookmap.data.repository.UserRepositoryImpl
 import com.example.bookmap.presentation.profile.ProfileScreenAction.LoadProfileData
 import com.example.bookmap.presentation.profile.ProfileScreenAction.removeBook
 import com.google.firebase.auth.FirebaseAuth
@@ -22,8 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val auth: FirebaseAuth,
-    private val statusRepository: StatusRepository,
-    private val userRepository: UserRepository
+    private val statusRepositoryImpl: StatusRepositoryImpl,
+    private val userRepositoryImpl: UserRepositoryImpl
 ) : ViewModel() {
     private val _UiState = MutableStateFlow(ProfileUiState())
     val uiState = _UiState
@@ -43,27 +43,27 @@ class ProfileViewModel @Inject constructor(
         _UiState.update { state ->
             when (book.isRead) {
                 READING -> {
-                    statusRepository.removeBook(book.id.toString())
+                    statusRepositoryImpl.removeBook(book.id.toString())
                     state.copy(readingBooks = state.readingBooks.filter { it.id != book.id })
                 }
 
                 READ -> {
-                    statusRepository.removeBook(book.id.toString())
+                    statusRepositoryImpl.removeBook(book.id.toString())
                     state.copy(readBooks = state.readBooks.filter { it.id != book.id })
                 }
 
                 UNREAD -> {
-                    statusRepository.removeBook(book.id.toString())
+                    statusRepositoryImpl.removeBook(book.id.toString())
                     state.copy(unreadBooks = state.unreadBooks.filter { it.id != book.id })
                 }
 
                 PAUSED -> {
-                    statusRepository.removeBook(book.id.toString())
+                    statusRepositoryImpl.removeBook(book.id.toString())
                     state.copy(pausedBooks = state.pausedBooks.filter { it.id != book.id })
                 }
 
                 DROPPED -> {
-                    statusRepository.removeBook(book.id.toString())
+                    statusRepositoryImpl.removeBook(book.id.toString())
                     state.copy(droppedBooks = state.droppedBooks.filter { it.id != book.id })
                 }
             }
@@ -76,7 +76,7 @@ class ProfileViewModel @Inject constructor(
         _UiState.update { it.copy(isLoading = true, showError = false) }
 
         _UiState.update {
-            userRepository.loadUserProfile(
+            userRepositoryImpl.loadUserProfile(
                 uid = user.uid,
                 onSuccess = { profile ->
                     _UiState.update {
@@ -113,7 +113,7 @@ class ProfileViewModel @Inject constructor(
             _UiState.update { it.copy(isLoading = true, showError = false) }
 
             try {
-                val books = statusRepository.getBooks()
+                val books = statusRepositoryImpl.getBooks()
 
                 _UiState.update { current ->
                     current.copy(
