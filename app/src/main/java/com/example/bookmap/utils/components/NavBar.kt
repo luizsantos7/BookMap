@@ -91,13 +91,6 @@ fun NavBarComponent(
             focusedBorderColor = focusFieldBorder,
             unfocusedBorderColor = UnfocusField,
             placeholder = "Buscar livros, autores...",
-            leadingIcon = {
-                Icon(
-                    Icons.Default.Search,
-                    contentDescription = null,
-                    tint = Color.Gray
-                )
-            },
             modifier = Modifier
                 .animateContentSize()
                 .weight(inputWeight)

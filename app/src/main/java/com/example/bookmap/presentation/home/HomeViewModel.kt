@@ -10,7 +10,7 @@ import com.example.bookmap.data.repository.StatusRepositoryImpl
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
 import com.example.bookmap.presentation.home.HomeScreenAction.GetBookBySearch
 import com.example.bookmap.presentation.home.HomeScreenAction.NextPage
-import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
+import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorite
 import com.example.bookmap.presentation.home.HomeScreenAction.OnRetry
 import com.example.bookmap.presentation.home.HomeScreenAction.OnSearchABook
 import com.example.bookmap.utils.constants.FIVE_MILISECONDS
@@ -44,7 +44,7 @@ class HomeViewModel @Inject constructor(
             is ClickSearchIcon -> onClickSearchIcon()
             is OnSearchABook -> onSearchBook(bookName = action.bookName)
             is GetBookBySearch -> onGetBookByName()
-            is OnFavorited -> favoriteBook(action.book)
+            is OnFavorite -> favoriteBook(action.book)
             OnRetry -> getBooks()
             NextPage -> nextPage()
         }
