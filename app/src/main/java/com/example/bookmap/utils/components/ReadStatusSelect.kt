@@ -1,5 +1,12 @@
 package com.example.bookmap.utils.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -21,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -105,62 +113,60 @@ fun ReadStatusSelector(
                 )
         )
 
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .background(dropdownBackground)
-                .border(
-                    width = 1.dp,
-                    color = borderColor,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .clip(RoundedCornerShape(8.dp))
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(
+                animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing)
+            ) + fadeIn(animationSpec = tween(durationMillis = 250)),
+            exit = shrinkVertically(
+                animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+            )
         ) {
-            options.forEach { status ->
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = when (status) {
-                                ReadStatusDataModel.READ -> "Lido"
-                                ReadStatusDataModel.READING -> "Lendo"
-                                ReadStatusDataModel.UNREAD -> "Pretendo ler"
-                                ReadStatusDataModel.PAUSED -> "Pausado"
-                                ReadStatusDataModel.DROPPED -> "Desistido"
-                            },
-                            color = if (status == currentStatus) {
-                                selectedItemColor
-                            } else {
-                                textColor
-                            },
-                            fontSize = 14.sp,
-                            fontWeight = if (status == currentStatus) {
-                                FontWeight.SemiBold
-                            } else {
-                                FontWeight.Normal
-                            }
-                        )
-                    },
-                    onClick = {
-                        onStatusChanged(status)
-                        expanded = false
-                    },
-                    colors = MenuDefaults.itemColors(
-                        textColor = textColor,
-                        leadingIconColor = textColor,
-                        trailingIconColor = textColor,
-                        disabledTextColor = labelColor,
-                        disabledLeadingIconColor = labelColor,
-                        disabledTrailingIconColor = labelColor
-                    ),
-                    modifier = Modifier.background(
-                        if (status == currentStatus) {
-                            hoverColor
-                        } else {
-                            Color.Transparent
-                        }
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .background(dropdownBackground)
+                    .border(
+                        width = 1.dp,
+                        color = borderColor,
+                        shape = RoundedCornerShape(8.dp)
                     )
-                )
+                    .clip(RoundedCornerShape(8.dp))
+            ) {
+                options.forEach { status ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = when (status) {
+                                    ReadStatusDataModel.READ -> "Lido"
+                                    ReadStatusDataModel.READING -> "Lendo"
+                                    ReadStatusDataModel.UNREAD -> "Pretendo ler"
+                                    ReadStatusDataModel.PAUSED -> "Pausado"
+                                    ReadStatusDataModel.DROPPED -> "Desistido"
+                                },
+                                color = if (status == currentStatus) selectedItemColor else textColor,
+                                fontSize = 14.sp,
+                                fontWeight = if (status == currentStatus) FontWeight.SemiBold else FontWeight.Normal
+                            )
+                        },
+                        onClick = {
+                            onStatusChanged(status)
+                            expanded = !expanded
+                        },
+                        colors = MenuDefaults.itemColors(
+                            textColor = textColor,
+                            leadingIconColor = textColor,
+                            trailingIconColor = textColor,
+                            disabledTextColor = labelColor,
+                            disabledLeadingIconColor = labelColor,
+                            disabledTrailingIconColor = labelColor
+                        ),
+                        modifier = Modifier.background(
+                            if (status == currentStatus) hoverColor else Color.Transparent
+                        )
+                    )
+                }
             }
         }
     }
