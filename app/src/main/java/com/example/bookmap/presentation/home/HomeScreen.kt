@@ -36,7 +36,7 @@ import androidx.navigation.NavController
 import com.example.bookmap.data.models.BookDataModel
 import com.example.bookmap.presentation.home.HomeScreenAction.ClickSearchIcon
 import com.example.bookmap.presentation.home.HomeScreenAction.NextPage
-import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorited
+import com.example.bookmap.presentation.home.HomeScreenAction.OnFavorite
 import com.example.bookmap.presentation.home.HomeScreenAction.OnRetry
 import com.example.bookmap.presentation.home.HomeScreenAction.OnSearchABook
 import com.example.bookmap.utils.card.BookCard
@@ -63,7 +63,7 @@ fun HomeScreen(
         },
         navController = navController,
         modifier = modifier,
-        onFavorited = { book -> viewModel.onActionEvent(OnFavorited(book)) },
+        onFavorited = { book -> viewModel.onActionEvent(OnFavorite(book)) },
         onRetry = { viewModel.onActionEvent(OnRetry) },
         onNextPage = { viewModel.onActionEvent(NextPage) },
     )
@@ -115,7 +115,7 @@ private fun HomeScreenContent(
             uiState.showError -> {
                 ErrorContent(
                     modifier = Modifier.weight(1f),
-                    errorMessage = "oiiiiiiii",
+                    errorMessage = "Erro ao buscar os livros...",
                     onRetry = onRetry
                 )
             }
@@ -188,7 +188,7 @@ private fun HomeScreenContent(
                                     color = Color.White,
                                     modifier = Modifier.padding(horizontal = 16.dp)
                                 )
-                                Spacer(Modifier.height(8.dp))
+                                Spacer(Modifier.height(26.dp))
                                 BookStatusRow(
                                     bookList = uiState.readingBooks,
                                     modifier = Modifier.fillMaxWidth(),

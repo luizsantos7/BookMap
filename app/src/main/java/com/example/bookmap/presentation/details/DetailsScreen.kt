@@ -21,18 +21,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.bookmap.data.models.ReadStatusDataModel
+import com.example.bookmap.presentation.home.HomeUiState
 import com.example.bookmap.utils.components.DetailsDescription
 import com.example.bookmap.utils.components.ErrorContent
 import com.example.bookmap.utils.components.Footer
 import com.example.bookmap.utils.components.NavBarComponent
 import com.example.bookmap.utils.ui.theme.BackgroundBlack
 import com.example.bookmap.utils.ui.theme.BackgroundGrayConstrast
+import com.google.api.Context
 
 @Composable
 fun DetailScreen(
@@ -99,7 +103,7 @@ private fun DetailScreenContent(
 
             else -> {
                 LazyColumn(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .weight(1f),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -148,4 +152,17 @@ private fun DetailScreenContent(
             Footer(navController = navController)
         }
     }
+}
+
+@Preview
+@Composable
+private fun DetailPreview() {
+    val fakeState = DetailUiState(
+        isLoading = false,
+        showError = false,
+    )
+    DetailScreenContent(
+        uiState = fakeState,
+        navController = NavController(LocalContext.current),
+    ) { }
 }

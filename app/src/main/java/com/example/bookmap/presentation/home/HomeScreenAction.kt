@@ -9,6 +9,6 @@ sealed interface HomeScreenAction {
 
     data class GetBookBySearch(val bookName: String) : HomeScreenAction
     data object OnRetry : HomeScreenAction
-    data class OnFavorited(val book: BookDataModel) : HomeScreenAction
+    data class OnFavorite(val book: BookDataModel) : HomeScreenAction
     data object NextPage : HomeScreenAction
 }
